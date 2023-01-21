@@ -45,8 +45,10 @@ const CustomTab = ({state, descriptors, navigation}) => {
         label === 'Prescription' &&
           (iconName = isFocused ? 'plus' : 'plus-outline');
         label === 'Graph' && (iconName = isFocused ? 'graph' : 'graph-outline');
-        label === 'AddLabsScreen' &&
+        label === 'AddLabs' &&
           (iconName = isFocused ? 'flask' : 'flask-outline');
+        label === 'Profile' &&
+          (iconName = isFocused ? 'account' : 'account-outline');
 
         const onPress = () => {
           const event = navigation.emit({

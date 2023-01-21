@@ -1,9 +1,12 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React from 'react';
+import React, {useContext} from 'react';
 import {Button} from 'react-native-paper';
+import {AuthAction, AuthContext} from '../context/AuthContext';
 
-const Profile = () => {
+const Profile = ({navigation}) => {
+  const {onSignOut} = useContext(AuthAction);
+  const {user} = useContext(AuthContext);
   return (
     <LinearGradient
       colors={['#0F8F9F', '#0F8F9F', '#0F8F9F', '#7CCFD9', '#ffffff']}
@@ -11,35 +14,37 @@ const Profile = () => {
       <View style={styles.Logo}>
         <Image
           style={{height: 80, width: 80}}
-          source={require('/Users/Asad Aslam/Desktop/React Native/NewProject/src/assets/img/logo1.png')}
+          source={require('../assets/img/logo1.png')}
         />
       </View>
-      <Text style={styles.docText}>PROFILE</Text>
-      <View style={styles.SubCon}>
-        <Text style={styles.ConH}>Username:</Text>
-        <Text style={styles.ConT}>Asad Aslam</Text>
-      </View>
-      <View style={styles.SubCon}>
-        <Text style={styles.ConH}>Email:</Text>
-        <Text style={styles.ConT}>asadaslam330@gmail.com</Text>
-      </View>
-      <View style={styles.SubCon}>
-        <Text style={styles.ConH}>Gender:</Text>
-        <Text style={styles.ConT}>Male</Text>
-      </View>
-      <View style={styles.SubCon}>
-        <Text style={styles.ConH}>Age:</Text>
-        <Text style={styles.ConT}>22</Text>
-      </View>
-      <View style={{marginLeft: 20, marginTop: '60%'}}>
-        <Button
-          buttonColor="#0F8F9F"
-          icon="account-arrow-left"
-          mode="contained"
-          onPress={() => console.log('Pressed')}>
-          LOGOUT
-        </Button>
-      </View>
+      <ScrollView>
+        <Text style={styles.docText}>PROFILE</Text>
+        <View style={styles.SubCon}>
+          <Text style={styles.ConH}>Username:</Text>
+          <Text style={styles.ConT}>{user.username}</Text>
+        </View>
+        <View style={styles.SubCon}>
+          <Text style={styles.ConH}>Email:</Text>
+          <Text style={styles.ConT}>{user.email}</Text>
+        </View>
+        <View style={styles.SubCon}>
+          <Text style={styles.ConH}>Gender:</Text>
+          <Text style={styles.ConT}>{user.gender}</Text>
+        </View>
+        <View style={styles.SubCon}>
+          <Text style={styles.ConH}>Age:</Text>
+          <Text style={styles.ConT}>{user.age}</Text>
+        </View>
+        <View style={{marginLeft: 20, marginTop: '20%'}}>
+          <Button
+            buttonColor="#0F8F9F"
+            icon="account-arrow-left"
+            mode="contained"
+            onPress={() => onSignOut(navigation)}>
+            LOGOUT
+          </Button>
+        </View>
+      </ScrollView>
     </LinearGradient>
   );
 };

@@ -1,14 +1,20 @@
 import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import TextRecognition from 'react-native-text-recognition';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {TextInput, Button} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import AddLabs from '../components/AddLabs';
+import {AddLabsAction} from '../context/AddLabsContext';
 
 const Heart = () => {
+  const {addHeartLab} = useContext(AddLabsAction);
   const [image, setImage] = useState('');
+
+  const [CPKMB, setCPKMB] = useState('');
+  const [troponin, setTroponin] = useState('');
+  const [CRP, setCRP] = useState('');
 
   const handleAddLaunch = () => {
     launchImageLibrary({}, setImage);
@@ -18,6 +24,20 @@ const Heart = () => {
       const result = await TextRecognition.recognize(image.assets[0].uri);
       console.log(result);
     }
+  };
+
+  const handleReport = () => {
+    const report = {
+      CPKMB: CPKMB,
+      Troponin: troponin,
+      CRP: CRP,
+    };
+
+    addHeartLab(report);
+
+    setCPKMB('');
+    setTroponin('');
+    setCRP('');
   };
 
   return (
@@ -37,10 +57,10 @@ const Heart = () => {
         <View style={styles.Logo}>
           <Image
             style={{height: 80, width: 80}}
-            source={require('/Users/Asad Aslam/Desktop/React Native/NewProject/src/assets/img/logo.png')}
+            source={require('../assets/img/logo.png')}
           />
         </View>
-        <Text style={styles.docText}>DIABETES</Text>
+        <Text style={styles.docText}>HEART</Text>
         <View style={{flex: 1, flexDirection: 'row'}}>
           <View
             style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
@@ -63,9 +83,21 @@ const Heart = () => {
             <Text style={styles.txt}>Unit</Text>
           </View>
         </View>
-        <AddLabs testName="CPK-MB" lr="5" hr="25" unit="IU/L" />
-        <AddLabs testName="Troponin" lr="0" hr="0.01" unit="ng/mL" />
-        <AddLabs testName="CRP" lr="0" hr="2.9" unit="mg" />
+        <AddLabs
+          testName="CPK-MB"
+          lr="5"
+          hr="25"
+          unit="IU/L"
+          setResult={setCPKMB}
+        />
+        <AddLabs
+          testName="Troponin"
+          lr="0"
+          hr="0.01"
+          unit="ng/mL"
+          setResult={setTroponin}
+        />
+        <AddLabs testName="CRP" lr="0" hr="2.9" unit="mg" setResult={setCRP} />
         <View
           style={{
             flex: 1,
@@ -101,7 +133,7 @@ const Heart = () => {
             buttonColor="#0F8F9F"
             icon="database-export-outline"
             mode="contained"
-            onPress={() => console.log('Pressed')}>
+            onPress={handleReport}>
             SAVE
           </Button>
         </View>

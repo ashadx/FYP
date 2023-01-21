@@ -9,8 +9,8 @@ import Dashboard from '../../screens/Dashboard';
 import History from '../../screens/History';
 import Prescription from '../../screens/Prescription';
 import ShowGraph from '../../screens/ShowGraph';
-import AddLabsScreen from '../../screens/AddLabsScreen';
 import LabsNavigation from '../LabsNavigation';
+import Profile from '../../screens/Profile';
 
 const Tab = createBottomTabNavigator();
 
@@ -35,6 +35,7 @@ const TabNavigator = ({navigation}) => {
       <Tab.Screen name="Prescription" component={Prescription} />
       <Tab.Screen name="Graph" component={ShowGraph} />
       <Tab.Screen name="AddLabs" component={LabsNavigation} />
+      <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
 };

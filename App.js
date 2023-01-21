@@ -9,11 +9,11 @@ import ContextProvider from './src/context/ContextProvider';
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <ContextProvider>
+    <ContextProvider>
+      <NavigationContainer>
         <StackNavigator />
-      </ContextProvider>
-    </NavigationContainer>
+      </NavigationContainer>
+    </ContextProvider>
   );
 };
 

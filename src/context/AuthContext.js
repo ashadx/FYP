@@ -106,6 +106,7 @@ const AuthContextProvider = ({children}) => {
           .get()
           .then(doc => {
             const UserData = doc.data();
+            console.log(UserData);
             setUser(UserData);
             navigation.navigate('Tabs');
           });
@@ -125,12 +126,13 @@ const AuthContextProvider = ({children}) => {
       .signOut()
       .then(() => {
         navigation.navigate('Auth');
+        setUser({});
         alert('Logout');
       });
   };
 
   return (
-    <AuthContext.Provider value={user}>
+    <AuthContext.Provider value={{user}}>
       <AuthAction.Provider
         value={{onSignOut, onSignUp, onSignIn, onSetTemplate}}>
         {children}

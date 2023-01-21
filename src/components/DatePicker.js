@@ -1,27 +1,40 @@
 import React, {useState} from 'react';
 import {Button} from 'react-native';
 import DatePicker from 'react-native-date-picker';
+import {IconButton} from 'react-native-paper';
 
-const DP = () => {
+const DateTimePicker = ({mode, minDate, icon, onChange}) => {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
 
+  const handleChange = () => {
+    setOpen(false);
+    setDate(date);
+    if (onChange) {
+      onChange(date);
+    }
+  };
+
   return (
     <>
-      <Button title="Open" onPress={() => setOpen(true)} />
+      <IconButton
+        icon={icon || 'calendar-edit'}
+        iconColor="#EFEFEF"
+        size={30}
+        onPress={() => setOpen(!open)}
+        mode="contained"
+        containerColor="#0F8F9F"
+      />
       <DatePicker
         modal
         open={open}
         date={date}
-        mode="date"
+        minimumDate={minDate}
+        mode={mode || 'date'}
         textColor="#0F8F9F"
         locale="en"
         androidVariant="nativeAndroid"
-        onConfirm={date => {
-          setOpen(false);
-          setDate(date);
-          console.log(date);
-        }}
+        onConfirm={handleChange}
         onCancel={() => {
           setOpen(false);
         }}
@@ -30,4 +43,4 @@ const DP = () => {
   );
 };
 
-export default DP;
+export default DateTimePicker;

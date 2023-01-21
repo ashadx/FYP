@@ -33,13 +33,13 @@ const CustomLabs = () => {
         '#0F8F9F',
       ]}
       style={styles.cont}>
+      <View style={styles.Logo}>
+        <Image
+          style={{height: 80, width: 80}}
+          source={require('../assets/img/logo.png')}
+        />
+      </View>
       <ScrollView>
-        <View style={styles.Logo}>
-          <Image
-            style={{height: 80, width: 80}}
-            source={require('/Users/Asad Aslam/Desktop/React Native/NewProject/src/assets/img/logo.png')}
-          />
-        </View>
         <Text style={styles.docText}>CUSTOM LABS</Text>
         <View style={{flex: 1, flexDirection: 'row'}}>
           <View

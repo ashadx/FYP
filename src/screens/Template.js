@@ -28,7 +28,7 @@ const Template = props => {
       <View style={styles.Logo}>
         <Image
           style={{height: 80, width: 80}}
-          source={require('/Users/Asad Aslam/Desktop/React Native/NewProject/src/assets/img/logo1.png')}
+          source={require('../assets/img/logo1.png')}
         />
       </View>
       <Text style={styles.docText}>SELECT TEMPLATE</Text>

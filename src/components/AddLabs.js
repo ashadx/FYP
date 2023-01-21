@@ -18,6 +18,7 @@ const AddLabs = props => {
           activeOutlineColor="#0F8F9F"
           mode="outlined"
           style={styles.txtinp}
+          onChangeText={props.setResult}
         />
       </View>
       <View style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>

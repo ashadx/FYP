@@ -1,25 +1,38 @@
 import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 
 import {TextInput, IconButton, Button} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import AddLabs from '../components/AddLabs';
+import {AddLabsAction, AddLabsContext} from '../context/AddLabsContext';
 
 const Custom = () => {
+  const {custom} = useContext(AddLabsContext);
+  const {addCustomWidget, addCustomLab} = useContext(AddLabsAction);
   const [testName, setTestName] = useState('');
   const [lr, setLr] = useState('');
   const [hr, setHr] = useState('');
   const [unit, setUnit] = useState('');
 
-  const [taskItem, setTaskItem] = useState([]);
-
   const handleAddTask = () => {
     const task = {testName: testName, lr: lr, hr: hr, unit: unit};
-    setTaskItem([...taskItem, task]);
+    addCustomWidget(task);
     setTestName(null);
     setLr(null);
     setHr(null);
     setUnit(null);
+  };
+
+  const handleReport = () => {
+    let report = {};
+    custom.forEach(data => {
+      const name = data.testName.toString();
+      report[name] = data.result;
+    });
+    addCustomLab(report);
+    custom.forEach(data => {
+      data.result = '';
+    });
   };
 
   return (
@@ -35,13 +48,13 @@ const Custom = () => {
         '#0F8F9F',
       ]}
       style={styles.cont}>
+      <View style={styles.Logo}>
+        <Image
+          style={{height: 80, width: 80}}
+          source={require('../assets/img/logo.png')}
+        />
+      </View>
       <ScrollView>
-        <View style={styles.Logo}>
-          <Image
-            style={{height: 80, width: 80}}
-            source={require('/Users/Asad Aslam/Desktop/React Native/NewProject/src/assets/img/logo.png')}
-          />
-        </View>
         <Text style={styles.docText}>Custom</Text>
         <View style={{flex: 1, flexDirection: 'row'}}>
           <View
@@ -65,17 +78,21 @@ const Custom = () => {
             <Text style={styles.txt}>Unit</Text>
           </View>
         </View>
-        {taskItem.map((item, index) => {
-          return (
-            <AddLabs
-              key={index}
-              testName={item.testName}
-              lr={item.lr}
-              hr={item.hr}
-              unit={item.unit}
-            />
-          );
-        })}
+        {custom.length > 0 &&
+          custom.map((item, index) => {
+            return (
+              <AddLabs
+                key={index}
+                testName={item.testName}
+                lr={item.lr}
+                hr={item.hr}
+                unit={item.unit}
+                setResult={text => {
+                  item.result = text;
+                }}
+              />
+            );
+          })}
         {/* <AddLabs testName="Abc" lr="0" hr="200" unit="mol" /> */}
         {/* <AddLabs testName="Abc" lr="0" hr="200" unit="mol" /> */}
 
@@ -140,7 +157,7 @@ const Custom = () => {
               flexDirection: 'column',
               alignItems: 'center',
             }}>
-            <Text style={styles.txt}></Text>
+            <Text style={styles.txt} />
             <IconButton
               icon="arrow-right-bold"
               iconColor="#EFEFEF"
@@ -151,6 +168,15 @@ const Custom = () => {
             />
           </View>
         </View>
+        <View style={{margin: 10}}>
+          <Button
+            buttonColor="#0F8F9F"
+            icon="database-export-outline"
+            mode="contained"
+            onPress={handleReport}>
+            SAVE
+          </Button>
+        </View>
       </ScrollView>
     </LinearGradient>
   );
@@ -158,6 +184,7 @@ const Custom = () => {
 
 const styles = StyleSheet.create({
   cont: {
+    flex: 1,
     height: '100%',
     padding: 20,
   },

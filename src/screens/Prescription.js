@@ -1,34 +1,44 @@
 import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 
 import {TextInput, IconButton, Button} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
-import AddLabs from '../components/AddLabs';
 import AddMedicines from '../components/AddMedicine';
-import DatePicker from 'react-native-date-picker';
+import DateTimePicker from '../components/DatePicker';
+import {GeneralUtil} from '../context/util';
+import {AddLabsAction, AddLabsContext} from '../context/AddLabsContext';
 
 const Prescription = () => {
-  const [date, setDate] = useState(new Date());
-  const [open, setOpen] = useState(false);
-  const [date2, setDate2] = useState(new Date());
-  const [open2, setOpen2] = useState(false);
-  const [time0, setTime0] = useState(new Date());
-  const [open0, setOpen0] = useState(false);
+  const {prescriptions} = useContext(AddLabsContext);
+  const {addPrescriptions, deletePrescriptions} = useContext(AddLabsAction);
 
-  const [medName, setmedName] = useState('');
-  const [start, setStart] = useState('');
-  const [end, setEnd] = useState('');
+  const [medName, setMedName] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [time, setTime] = useState('');
 
-  const [taskItem, setTaskItem] = useState([]);
-
   const handleAddTask = () => {
-    const task = {medName: medName, start: start, end: end, time: time};
-    setTaskItem([...taskItem, task]);
-    setmedName(null);
-    setStart(null);
-    setEnd(null);
+    const task = {medName: medName, start: startDate, end: endDate, time: time};
+    addPrescriptions(task);
+    setMedName(null);
+    setStartDate(null);
+    setEndDate(null);
     setTime(null);
+  };
+
+  const handleStartDate = datetime => {
+    const formatted = GeneralUtil.datetimeFormatter(datetime, 'date');
+    setStartDate(formatted);
+  };
+
+  const handleEndDate = datetime => {
+    const formatted = GeneralUtil.datetimeFormatter(datetime, 'date');
+    setEndDate(formatted);
+  };
+
+  const handleTime = datetime => {
+    const formatted = GeneralUtil.datetimeFormatter(datetime, 'time');
+    setTime(formatted);
   };
 
   return (
@@ -48,7 +58,7 @@ const Prescription = () => {
         <View style={styles.Logo}>
           <Image
             style={{height: 80, width: 80}}
-            source={require('/Users/Asad Aslam/Desktop/React Native/NewProject/src/assets/img/logo.png')}
+            source={require('../assets/img/logo.png')}
           />
         </View>
         <Text style={styles.docText}>Prescription</Text>
@@ -71,32 +81,22 @@ const Prescription = () => {
           </View>
           <View
             style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
-            <Text style={styles.txt}></Text>
+            <Text style={styles.txt} />
           </View>
         </View>
-        {taskItem.map((item, index) => {
-          return (
-            <AddMedicines
-              key={index}
-              MedName={item.medName}
-              Start={item.start}
-              End={item.end}
-              Time={item.time}
-            />
-          );
-        })}
-        <AddMedicines
-          MedName="Panadol"
-          Start="10/01/22"
-          End="11/01/22"
-          Time="10:00AM"
-        />
-        <AddMedicines
-          MedName="Panadol"
-          Start="10/01/22"
-          End="11/01/22"
-          Time="10:00AM"
-        />
+        {prescriptions.length > 0 &&
+          prescriptions.map((item, index) => {
+            return (
+              <AddMedicines
+                key={index}
+                MedName={item.medName}
+                Start={item.start}
+                End={item.end}
+                Time={item.time}
+                func={() => deletePrescriptions(item.id)}
+              />
+            );
+          })}
         <View
           style={{
             flex: 1,
@@ -113,101 +113,23 @@ const Prescription = () => {
               mode="outlined"
               style={styles.txtinp}
               value={medName}
-              onChangeText={text => setmedName(text)}
+              onChangeText={text => setMedName(text)}
             />
           </View>
           <View
             style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
             <Text style={styles.txt}>Start</Text>
-            <IconButton
-              icon="calendar-edit"
-              iconColor="#EFEFEF"
-              size={30}
-              onPress={() => setOpen(true)}
-              mode="contained"
-              containerColor="#0F8F9F"
-            />
-            <DatePicker
-              modal
-              open={open}
-              date={date}
-              mode="date"
-              textColor="#0F8F9F"
-              locale="en"
-              androidVariant="nativeAndroid"
-              onConfirm={date => {
-                setOpen(false);
-                setDate(date);
-                console.log(date);
-              }}
-              onCancel={() => {
-                setOpen(false);
-              }}
-              value={start}
-              onDateChange={text => setStart(text)}
-            />
+            <DateTimePicker onChange={handleStartDate} />
           </View>
           <View
             style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
             <Text style={styles.txt}>End</Text>
-            <IconButton
-              icon="calendar-edit"
-              iconColor="#EFEFEF"
-              size={30}
-              onPress={() => setOpen2(true)}
-              mode="contained"
-              containerColor="#0F8F9F"
-            />
-            <DatePicker
-              modal
-              open={open}
-              date={date}
-              mode="date"
-              textColor="#0F8F9F"
-              locale="en"
-              androidVariant="nativeAndroid"
-              onConfirm={date => {
-                setOpen2(false);
-                setDate2(date);
-                console.log(date);
-              }}
-              onCancel={() => {
-                setOpen2(false);
-              }}
-              value={end}
-              onDateChange={text => setEnd(text)}
-            />
+            <DateTimePicker onChange={handleEndDate} />
           </View>
           <View
             style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
             <Text style={styles.txt}>Time</Text>
-            <IconButton
-              icon="alarm"
-              iconColor="#EFEFEF"
-              size={30}
-              onPress={() => setOpen0(true)}
-              mode="contained"
-              containerColor="#0F8F9F"
-            />
-            <DatePicker
-              modal
-              open={open}
-              date={date}
-              mode="time"
-              textColor="#0F8F9F"
-              locale="en"
-              androidVariant="nativeAndroid"
-              onConfirm={date => {
-                setOpen0(false);
-                setDate0(date);
-                console.log(date);
-              }}
-              onCancel={() => {
-                setOpen0(false);
-              }}
-              value={time}
-              onDateChange={text => setTime(text)}
-            />
+            <DateTimePicker icon="alarm" onChange={handleTime} mode="time" />
           </View>
           <View
             style={{
@@ -215,7 +137,7 @@ const Prescription = () => {
               flexDirection: 'column',
               alignItems: 'center',
             }}>
-            <Text style={styles.txt}></Text>
+            <Text style={styles.txt} />
             <IconButton
               icon="arrow-right-bold"
               iconColor="#EFEFEF"

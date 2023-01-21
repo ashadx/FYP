@@ -46,7 +46,7 @@ const SignUp = props => {
         <View style={styles.Logo}>
           <Image
             style={{height: 80, width: 80}}
-            source={require('/Users/Asad Aslam/Desktop/React Native/NewProject/src/assets/img/logo.png')}
+            source={require('../assets/img/logo.png')}
           />
         </View>
         <Text style={styles.docText}>SIGN IN</Text>

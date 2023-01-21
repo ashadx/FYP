@@ -16,14 +16,14 @@ const Welcome = props => {
       <View style={styles.Logo}>
         <Image
           style={{height: 80, width: 80}}
-          source={require('/Users/Asad Aslam/Desktop/React Native/NewProject/src/assets/img/logo1.png')}
+          source={require('../assets/img/logo1.png')}
         />
       </View>
       <Text style={styles.docText}>Welcome To Your Health Care Partner</Text>
       <View style={styles.doc}>
         <Image
           style={{height: '70%', width: '70%'}}
-          source={require('/Users/Asad Aslam/Desktop/React Native/NewProject/src/assets/img/doc.png')}
+          source={require('../assets/img/doc.png')}
         />
       </View>
       <Button

@@ -11,7 +11,9 @@ const AddLabsScreen = () => {
   const {user} = useContext(AuthContext);
   const [templatetype, setTemplateType] = useState(user?.template || '');
 
+  console.log('user => ', user);
   useEffect(() => {
+    console.log('user => ', user);
     setTemplateType(user?.template);
   }, [user]);
 
