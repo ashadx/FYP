@@ -17,13 +17,17 @@ const ShowGraph = () => {
   const {report} = useContext(AddLabsContext);
 
   console.log('report => ', report);
-  const date = report.map(data =>
-    GeneralUtil.datetimeFormatter(Date(data.createdAt), 'date'),
-  );
+  const date =
+    report.length > 0 &&
+    report?.map(data =>
+      GeneralUtil.datetimeFormatter(Date(data.createdAt), 'date'),
+    );
 
-  const heading = Object.keys(report[0]).filter(
-    data => data !== 'createdAt' && data !== 'id',
-  );
+  const heading =
+    report.length > 0 &&
+    Object.keys(report[0]).filter(
+      data => data !== 'createdAt' && data !== 'id',
+    );
   // console.log('date => ', date);
   // console.log('report keys => ');
 
@@ -59,53 +63,54 @@ const ShowGraph = () => {
             Graph
           </Button>
         </View> */}
-        {report.map((data, index) => {
-          const title = heading[index];
-          const dataSet = report.map(data => Number(data[title]));
-          return (
-            <View style={{}}>
-              <Text style={styles.ConH}>{title}:</Text>
-              <LineChart
-                data={{
-                  labels: date, //[('January', 'February', 'March', 'April', 'May', 'June')],
-                  datasets: [
-                    {
-                      data: dataSet,
+        {report.length > 0 &&
+          report.map((data, index) => {
+            const title = heading[index];
+            const dataSet = report.map(data => Number(data[title]));
+            return (
+              <View style={{}} key={index}>
+                <Text style={styles.ConH}>{title}:</Text>
+                <LineChart
+                  data={{
+                    labels: date, //[('January', 'February', 'March', 'April', 'May', 'June')],
+                    datasets: [
+                      {
+                        data: dataSet,
+                      },
+                    ],
+                  }}
+                  width={Dimensions.get('window').width - 40} // from react-native
+                  height={220}
+                  // yAxisLabel="$"
+                  // yAxisSuffix="k"
+                  yAxisInterval={1} // optional, defaults to 1
+                  chartConfig={{
+                    backgroundColor: '#e26a00',
+                    backgroundGradientFrom: '#0F8F9F',
+                    backgroundGradientTo: '#7CCFD9',
+                    decimalPlaces: 2, // optional, defaults to 2dp
+                    color: (opacity = 10) => `rgba(255, 255, 255, ${opacity})`,
+                    labelColor: (opacity = 10) =>
+                      `rgba(255, 255, 255, ${opacity})`,
+                    style: {
+                      borderRadius: 16,
                     },
-                  ],
-                }}
-                width={Dimensions.get('window').width - 40} // from react-native
-                height={220}
-                // yAxisLabel="$"
-                // yAxisSuffix="k"
-                yAxisInterval={1} // optional, defaults to 1
-                chartConfig={{
-                  backgroundColor: '#e26a00',
-                  backgroundGradientFrom: '#0F8F9F',
-                  backgroundGradientTo: '#7CCFD9',
-                  decimalPlaces: 2, // optional, defaults to 2dp
-                  color: (opacity = 10) => `rgba(255, 255, 255, ${opacity})`,
-                  labelColor: (opacity = 10) =>
-                    `rgba(255, 255, 255, ${opacity})`,
-                  style: {
+                    propsForDots: {
+                      r: '6',
+                      strokeWidth: '2',
+                      stroke: '#ffa726',
+                    },
+                  }}
+                  bezier
+                  style={{
+                    margin: 10,
+                    marginVertical: 30,
                     borderRadius: 16,
-                  },
-                  propsForDots: {
-                    r: '6',
-                    strokeWidth: '2',
-                    stroke: '#ffa726',
-                  },
-                }}
-                bezier
-                style={{
-                  margin: 10,
-                  marginVertical: 30,
-                  borderRadius: 16,
-                }}
-              />
-            </View>
-          );
-        })}
+                  }}
+                />
+              </View>
+            );
+          })}
       </ScrollView>
     </LinearGradient>
   );
