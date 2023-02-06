@@ -1,9 +1,10 @@
 import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {TextInput, Button} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import {AddLabsAction} from '../context/AddLabsContext';
+import OCR from '../components/OCR';
 
 const Kidney = () => {
   const {addKidneyLab} = useContext(AddLabsAction);
@@ -15,6 +16,7 @@ const Kidney = () => {
   const [Potassium, setPotassium] = useState('');
   const [Chloride, setChloride] = useState('');
   const [TotalProtien, setTotalProtien] = useState('');
+  const [text, setText] = useState('');
 
   const handleReport = () => {
     const report = {
@@ -37,6 +39,42 @@ const Kidney = () => {
     setChloride('');
     setTotalProtien('');
   };
+
+  useEffect(() => {
+    if (text !== '') {
+      const BloodUrea_postion =
+        text.toLowerCase().indexOf(' = ') + (' = '.length - 1);
+      setBloodUrea(text.slice(BloodUrea_postion, BloodUrea_postion + 4));
+      console.log('text => ', text.toLowerCase().search('total protein = '));
+
+      const Creatinine_postion =
+        text.toLowerCase().search('creatinine = ') +
+        ('creatinine = '.length - 1);
+      setCreatinine(text.slice(Creatinine_postion, Creatinine_postion + 4));
+
+      const UricAcid_postion =
+        text.toLowerCase().search('acid = ') + ('acid = '.length - 1);
+      setUricAcid(text.slice(UricAcid_postion, UricAcid_postion + 4));
+
+      const Sodium_postion =
+        text.toLowerCase().search('sodium = ') + ('sodium = '.length - 1);
+      setSodium(text.slice(Sodium_postion, Sodium_postion + 4));
+
+      const Potassium_postion =
+        text.toLowerCase().search('potassium = ') + ('potassium = '.length - 1);
+      setPotassium(text.slice(Potassium_postion, Potassium_postion + 4));
+
+      const Chloride_postion =
+        text.toLowerCase().search('chloride = ') + ('chloride = '.length - 1);
+      setChloride(text.slice(Chloride_postion, Chloride_postion + 4));
+
+      const TotalProtien_postion =
+        text.toLowerCase().search('protein = ') + ('protein = '.length - 1);
+      setTotalProtien(
+        text.slice(TotalProtien_postion, TotalProtien_postion + 4),
+      );
+    }
+  }, [text]);
 
   return (
     <LinearGradient
@@ -69,7 +107,7 @@ const Kidney = () => {
             <Text style={styles.Subtxt}>Sodium</Text>
             <Text style={styles.Subtxt}>Potassium</Text>
             <Text style={styles.Subtxt}>Chloride</Text>
-            <Text style={styles.Subtxt}>Total Protien</Text>
+            <Text style={styles.Subtxt}>Total Protein</Text>
           </View>
           <View
             style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
@@ -90,6 +128,7 @@ const Kidney = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={BloodUrea}
               onChangeText={setBloodUrea}
             />
             <TextInput
@@ -97,6 +136,7 @@ const Kidney = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={Creatinine}
               onChangeText={setCreatinine}
             />
             <TextInput
@@ -104,6 +144,7 @@ const Kidney = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={UricAcid}
               onChangeText={setUricAcid}
             />
             <TextInput
@@ -111,6 +152,7 @@ const Kidney = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={Sodium}
               onChangeText={setSodium}
             />
             <TextInput
@@ -118,6 +160,7 @@ const Kidney = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={Potassium}
               onChangeText={setPotassium}
             />
             <TextInput
@@ -125,6 +168,7 @@ const Kidney = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={Chloride}
               onChangeText={setChloride}
             />
             <TextInput
@@ -132,6 +176,7 @@ const Kidney = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={TotalProtien}
               onChangeText={setTotalProtien}
             />
           </View>
@@ -158,36 +203,6 @@ const Kidney = () => {
             <Text style={styles.Subtxt}>g/dL</Text>
           </View>
         </View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            marginTop: 40,
-            marginBottom: 20,
-            marginLeft: 16,
-            marginRight: 16,
-          }}>
-          <View style={{flex: 0, flexDirection: 'column', marginRight: 10}}>
-            <Button
-              labelStyle={{fontSize: 9}}
-              buttonColor="#0F8F9F"
-              icon="file-import-outline"
-              mode="contained"
-              onPress={() => console.log('Pressed')}>
-              Import From PDF
-            </Button>
-          </View>
-          <View style={{flex: 0, flexDirection: 'column', marginLeft: 10}}>
-            <Button
-              labelStyle={{fontSize: 9}}
-              buttonColor="#0F8F9F"
-              icon="file-image"
-              mode="contained"
-              onPress={() => console.log('Pressed')}>
-              Import From Image
-            </Button>
-          </View>
-        </View>
         <View style={{margin: 10}}>
           <Button
             buttonColor="#0F8F9F"
@@ -197,6 +212,7 @@ const Kidney = () => {
             SAVE
           </Button>
         </View>
+        <OCR handleText={setText} />
       </ScrollView>
     </LinearGradient>
   );

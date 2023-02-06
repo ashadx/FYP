@@ -1,9 +1,10 @@
 import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {TextInput, Button} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import {AddLabsAction} from '../context/AddLabsContext';
+import OCR from '../components/OCR';
 
 const Diabetes = () => {
   const {addDiabetesLab} = useContext(AddLabsAction);
@@ -12,6 +13,7 @@ const Diabetes = () => {
   const [FPG, setFPG] = useState('');
   const [GT, setGT] = useState('');
   const [RPG, setRPG] = useState('');
+  const [text, setText] = useState('');
 
   const handleReport = () => {
     const report = {
@@ -28,6 +30,26 @@ const Diabetes = () => {
     setGT('');
     setRPG('');
   };
+
+  useEffect(() => {
+    if (text !== '') {
+      const A1C_postion =
+        text.toLowerCase().indexOf(' = ') + (' = '.length - 1);
+      setA1C(text.slice(A1C_postion, A1C_postion + 4));
+
+      const FPG_postion =
+        text.toLowerCase().indexOf('fpg test = ') + ('fpg test = '.length - 1);
+      setFPG(text.slice(FPG_postion, FPG_postion + 4));
+
+      const GT_postion =
+        text.toLowerCase().indexOf('gt test = ') + ('gt test = '.length - 1);
+      setGT(text.slice(GT_postion, GT_postion + 4));
+
+      const RPG_postion =
+        text.toLowerCase().indexOf('rpg test = ') + ('rpg test = '.length - 1);
+      setRPG(text.slice(RPG_postion, RPG_postion + 4));
+    }
+  }, [text]);
 
   return (
     <LinearGradient
@@ -75,6 +97,7 @@ const Diabetes = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={A1C}
               onChangeText={setA1C}
             />
             <TextInput
@@ -82,6 +105,7 @@ const Diabetes = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={FPG}
               onChangeText={setFPG}
             />
             <TextInput
@@ -89,6 +113,7 @@ const Diabetes = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={GT}
               onChangeText={setGT}
             />
             <TextInput
@@ -96,6 +121,7 @@ const Diabetes = () => {
               activeOutlineColor="#0F8F9F"
               mode="outlined"
               style={styles.txtinp}
+              value={RPG}
               onChangeText={setRPG}
             />
           </View>
@@ -116,36 +142,6 @@ const Diabetes = () => {
             <Text style={styles.Subtxt}>mg/dL</Text>
           </View>
         </View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: 'row',
-            marginTop: 40,
-            marginBottom: 20,
-            marginLeft: 16,
-            marginRight: 16,
-          }}>
-          <View style={{flex: 0, flexDirection: 'column', marginRight: 10}}>
-            <Button
-              labelStyle={{fontSize: 9}}
-              buttonColor="#0F8F9F"
-              icon="file-import-outline"
-              mode="contained"
-              onPress={() => console.log('Pressed')}>
-              Import From PDF
-            </Button>
-          </View>
-          <View style={{flex: 0, flexDirection: 'column', marginLeft: 10}}>
-            <Button
-              labelStyle={{fontSize: 9}}
-              buttonColor="#0F8F9F"
-              icon="file-image"
-              mode="contained"
-              onPress={() => console.log('Pressed')}>
-              Import From Image
-            </Button>
-          </View>
-        </View>
         <View style={{margin: 10}}>
           <Button
             buttonColor="#0F8F9F"
@@ -155,6 +151,7 @@ const Diabetes = () => {
             SAVE
           </Button>
         </View>
+        <OCR handleText={setText} />
       </ScrollView>
     </LinearGradient>
   );

@@ -1,10 +1,11 @@
 import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 
 import {TextInput, IconButton, Button} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import AddLabs from '../components/AddLabs';
 import {AddLabsAction, AddLabsContext} from '../context/AddLabsContext';
+import OCR from '../components/OCR';
 
 const Custom = () => {
   const {custom} = useContext(AddLabsContext);
@@ -13,6 +14,8 @@ const Custom = () => {
   const [lr, setLr] = useState('');
   const [hr, setHr] = useState('');
   const [unit, setUnit] = useState('');
+  const [customLab, setCustomLab] = useState([]);
+  const [text, setText] = useState('');
 
   const handleAddTask = () => {
     const task = {testName: testName, lr: lr, hr: hr, unit: unit};
@@ -177,6 +180,7 @@ const Custom = () => {
             SAVE
           </Button>
         </View>
+        <OCR handleText={setText} />
       </ScrollView>
     </LinearGradient>
   );

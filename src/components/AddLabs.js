@@ -18,6 +18,7 @@ const AddLabs = props => {
           activeOutlineColor="#0F8F9F"
           mode="outlined"
           style={styles.txtinp}
+          value={props.result}
           onChangeText={props.setResult}
         />
       </View>

@@ -1,30 +1,19 @@
 import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 
-import TextRecognition from 'react-native-text-recognition';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {TextInput, Button} from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import AddLabs from '../components/AddLabs';
 import {AddLabsAction} from '../context/AddLabsContext';
+import OCR from '../components/OCR';
 
 const Heart = () => {
   const {addHeartLab} = useContext(AddLabsAction);
-  const [image, setImage] = useState('');
 
   const [CPKMB, setCPKMB] = useState('');
   const [troponin, setTroponin] = useState('');
   const [CRP, setCRP] = useState('');
-
-  const handleAddLaunch = () => {
-    launchImageLibrary({}, setImage);
-  };
-  const handleAddImage = async () => {
-    if (image) {
-      const result = await TextRecognition.recognize(image.assets[0].uri);
-      console.log(result);
-    }
-  };
+  const [text, setText] = useState('');
 
   const handleReport = () => {
     const report = {
@@ -39,6 +28,23 @@ const Heart = () => {
     setTroponin('');
     setCRP('');
   };
+
+  useEffect(() => {
+    if (text !== '') {
+      const cpkmb_postion =
+        text.toLowerCase().indexOf(' = ') + (' = '.length - 1);
+      setCPKMB(text.slice(cpkmb_postion, cpkmb_postion + 4));
+      // console.log('cpkmb_postion => ', text.slice(cpkmb_postion + 7, 4));
+
+      const troponin_postion =
+        text.toLowerCase().indexOf('troponin = ') + ('troponin = '.length - 1);
+      setTroponin(text.slice(troponin_postion, troponin_postion + 4));
+
+      const CRP_postion =
+        text.toLowerCase().indexOf('crp = ') + ('crp = '.length - 1);
+      setCRP(text.slice(CRP_postion, CRP_postion + 4));
+    }
+  }, [text]);
 
   return (
     <LinearGradient
@@ -89,6 +95,7 @@ const Heart = () => {
           hr="25"
           unit="IU/L"
           setResult={setCPKMB}
+          result={CPKMB}
         />
         <AddLabs
           testName="Troponin"
@@ -96,8 +103,16 @@ const Heart = () => {
           hr="0.01"
           unit="ng/mL"
           setResult={setTroponin}
+          result={troponin}
         />
-        <AddLabs testName="CRP" lr="0" hr="2.9" unit="mg" setResult={setCRP} />
+        <AddLabs
+          testName="CRP"
+          lr="0"
+          hr="2.9"
+          unit="mg"
+          setResult={setCRP}
+          result={CRP}
+        />
         <View
           style={{
             flex: 1,
@@ -137,6 +152,7 @@ const Heart = () => {
             SAVE
           </Button>
         </View>
+        <OCR handleText={setText} />
       </ScrollView>
     </LinearGradient>
   );
