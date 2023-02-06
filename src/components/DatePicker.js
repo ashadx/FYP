@@ -7,7 +7,7 @@ const DateTimePicker = ({mode, minDate, icon, onChange}) => {
   const [date, setDate] = useState(new Date());
   const [open, setOpen] = useState(false);
 
-  const handleChange = () => {
+  const handleChange = date => {
     setOpen(false);
     setDate(date);
     if (onChange) {
