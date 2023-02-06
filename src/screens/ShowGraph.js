@@ -16,26 +16,23 @@ import {GeneralUtil} from '../context/util';
 const ShowGraph = () => {
   const {report} = useContext(AddLabsContext);
   const [dates, setDates] = useState([]);
-  const [heading, setHeading] = useState([]);
   const [reports, setReports] = useState([]);
 
   useEffect(() => {
     if (report.length > 0) {
-      const date = report?.map(data =>
-        GeneralUtil.datetimeFormatter(Date(data.createdAt), 'date'),
-      );
+      console.log(report.sort(data => data.createdAt));
+      const date = report?.map(data => {
+        return GeneralUtil.datetimeFormatter(data.createdAt.toDate(), 'date');
+      });
       setDates(date);
 
       const headings = Object.keys(report[0]).filter(
         data => data !== 'createdAt' && data !== 'id',
       );
-      setHeading(headings);
 
-      const repo = headings.map(data => {
+      let repo = headings.map(data => {
         const title = data;
         const dataSet = report.map(data => Number(data[title] || 0)) || [];
-        console.log('title => ', title);
-        console.log('dataSet => ', dataSet);
         return {
           title: title,
           dataSet: dataSet,
@@ -45,11 +42,7 @@ const ShowGraph = () => {
     }
   }, [report]);
 
-  console.log('report => ', report);
-  console.log('date => ', dates);
-  console.log('heading => ', heading);
-  // console.log('date => ', date);
-  // console.log('report keys => ');
+  console.log('dates => ', dates);
 
   return (
     <LinearGradient

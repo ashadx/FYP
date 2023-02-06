@@ -138,6 +138,7 @@ const AddLabsContextProvider = ({children}) => {
         .collection('Labs') // Table Name
         .doc(user.uid)
         .collection(template || 'Custom')
+        .orderBy('createdAt', 'asc')
         .onSnapshot(snaps => {
           if (!snaps.empty) {
             const data = snaps.docs.map(data => ({
