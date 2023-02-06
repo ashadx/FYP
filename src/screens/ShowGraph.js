@@ -20,9 +20,8 @@ const ShowGraph = () => {
 
   useEffect(() => {
     if (report.length > 0) {
-      console.log(report.sort(data => data.createdAt));
       const date = report?.map(data => {
-        return GeneralUtil.datetimeFormatter(data.createdAt.toDate(), 'date');
+        return GeneralUtil.datetimeFormatter(data.createdAt?.toDate(), 'date');
       });
       setDates(date);
 
