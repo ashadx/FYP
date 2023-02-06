@@ -8,26 +8,46 @@ import {
   ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, List} from 'react-native-paper';
 import {LineChart} from 'react-native-chart-kit';
 import {AddLabsContext} from '../context/AddLabsContext';
 import {GeneralUtil} from '../context/util';
 const ShowGraph = () => {
   const {report} = useContext(AddLabsContext);
+  const [dates, setDates] = useState([]);
+  const [heading, setHeading] = useState([]);
+  const [reports, setReports] = useState([]);
+
+  useEffect(() => {
+    if (report.length > 0) {
+      const date = report?.map(data =>
+        GeneralUtil.datetimeFormatter(Date(data.createdAt), 'date'),
+      );
+      setDates(date);
+
+      const headings = Object.keys(report[0]).filter(
+        data => data !== 'createdAt' && data !== 'id',
+      );
+      setHeading(headings);
+
+      const repo = headings.map(data => {
+        const title = data;
+        const dataSet = report.map(data => Number(data[title] || 0)) || [];
+        console.log('title => ', title);
+        console.log('dataSet => ', dataSet);
+        return {
+          title: title,
+          dataSet: dataSet,
+        };
+      });
+      setReports(repo);
+    }
+  }, [report]);
 
   console.log('report => ', report);
-  const date =
-    report.length > 0 &&
-    report?.map(data =>
-      GeneralUtil.datetimeFormatter(Date(data.createdAt), 'date'),
-    );
-
-  const heading =
-    report.length > 0 &&
-    Object.keys(report[0]).filter(
-      data => data !== 'createdAt' && data !== 'id',
-    );
+  console.log('date => ', dates);
+  console.log('heading => ', heading);
   // console.log('date => ', date);
   // console.log('report keys => ');
 
@@ -63,19 +83,17 @@ const ShowGraph = () => {
             Graph
           </Button>
         </View> */}
-        {report.length > 0 &&
-          report.map((data, index) => {
-            const title = heading[index];
-            const dataSet = report.map(data => Number(data[title]));
+        {reports?.length > 0 &&
+          reports?.map((data, index) => {
             return (
-              <View style={{}} key={index}>
-                <Text style={styles.ConH}>{title}:</Text>
+              <View key={data.title + '-' + index}>
+                <Text style={styles.ConH}>{data.title}:</Text>
                 <LineChart
                   data={{
-                    labels: date, //[('January', 'February', 'March', 'April', 'May', 'June')],
+                    labels: dates, //[('January', 'February', 'March', 'April', 'May', 'June')],
                     datasets: [
                       {
-                        data: dataSet,
+                        data: data.dataSet,
                       },
                     ],
                   }}
