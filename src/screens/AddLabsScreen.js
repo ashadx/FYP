@@ -24,9 +24,8 @@ const AddLabsScreen = () => {
   ) : templatetype === 'Heart' ? (
     <Heart />
   ) : templatetype === 'Custom' ? (
-    <Kidney />
+    <Custom />
   ) : (
-    // <Custom />
     <Template />
   );
 };
