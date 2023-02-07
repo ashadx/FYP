@@ -33,20 +33,19 @@ const Diabetes = () => {
 
   useEffect(() => {
     if (text !== '') {
-      const A1C_postion =
-        text.toLowerCase().indexOf(' = ') + (' = '.length - 1);
+      const A1C_postion = text.toLowerCase().search(' = ') + (' = '.length - 1);
       setA1C(text.slice(A1C_postion, A1C_postion + 4));
 
       const FPG_postion =
-        text.toLowerCase().indexOf('fpg test = ') + ('fpg test = '.length - 1);
+        text.toLowerCase().search('fpg test = ') + ('fpg test = '.length - 1);
       setFPG(text.slice(FPG_postion, FPG_postion + 4));
 
       const GT_postion =
-        text.toLowerCase().indexOf('gt test = ') + ('gt test = '.length - 1);
+        text.toLowerCase().search('gt test = ') + ('gt test = '.length - 1);
       setGT(text.slice(GT_postion, GT_postion + 4));
 
       const RPG_postion =
-        text.toLowerCase().indexOf('rpg test = ') + ('rpg test = '.length - 1);
+        text.toLowerCase().search('rpg test = ') + ('rpg test = '.length - 1);
       setRPG(text.slice(RPG_postion, RPG_postion + 4));
     }
   }, [text]);
