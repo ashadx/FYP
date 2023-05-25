@@ -31,17 +31,36 @@ const App = () => {
   //   PushNotification.requestPermissions();
   // }, []);
 
+  // useEffect(() => {
+  //   const setupPushNotifications = async () => {
+  //     const hasPermission = await requestUserPermission();
+  //     if (hasPermission) {
+  //       await getToken();
+  //     }
+  //     handleNotifications();
+  //   };
+
+  //   setupPushNotifications();
+  // }, []);
+
   useEffect(() => {
-    const setupPushNotifications = async () => {
-      const hasPermission = await requestUserPermission();
-      if (hasPermission) {
-        await getToken();
-      }
-      handleNotifications();
+    const schedulePushNotification = (title, message, scheduleTime) => {
+      PushNotification.localNotificationSchedule({
+        // channelId: 'your-channel-id', // Provide the ID of your notification channel
+        title: title,
+        message: message,
+        date: scheduleTime,
+      });
     };
 
-    setupPushNotifications();
-  }, []);
+    // Usage
+    const notificationTitle = 'Scheduled Notification';
+    const notificationMessage = 'This is a scheduled push notification!';
+    const scheduleTime = new Date(); // Set the desired schedule time
+    scheduleTime.setSeconds(scheduleTime.getSeconds() + 10); // Add 10 seconds for testing
+
+    schedulePushNotification(notificationTitle, notificationMessage, scheduleTime);
+  })
 
 
   return (
