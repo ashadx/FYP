@@ -6,23 +6,18 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, { useContext, useState, useEffect } from 'react';
-import { TextInput, Button } from 'react-native-paper';
+import React, {useContext, useState} from 'react';
+import {TextInput, Button} from 'react-native-paper';
 
 import LinearGradient from 'react-native-linear-gradient';
-import { AuthAction } from '../context/AuthContext';
-import PushNotification from "react-native-push-notification";
+import {AuthAction} from '../context/AuthContext';
 
 const Login = props => {
-  const { navigation } = props;
+  const {navigation} = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const { onSignIn } = useContext(AuthAction);
-
-  useEffect(() => {
-    createChannel()
-  }, [])
+  const {onSignIn} = useContext(AuthAction);
 
   const handlePressSignUp = () => {
     navigation.navigate('Signup');
@@ -35,13 +30,6 @@ const Login = props => {
       alert('Invalid Email or Password');
     }
   };
-
-  const createChannel = () => {
-    PushNotification.createChannel({
-      channelId: "test-channel",
-      channelName: "Test Channel"
-    })
-  }
 
   return (
     <LinearGradient
@@ -57,7 +45,7 @@ const Login = props => {
       <ScrollView>
         <View style={styles.Logo}>
           <Image
-            style={{ height: 80, width: 80 }}
+            style={{height: 80, width: 80}}
             source={require('../assets/img/logo.png')}
           />
         </View>
@@ -94,12 +82,12 @@ const Login = props => {
             }}
           />
         </View>
-        <View style={{ alignItems: 'flex-end', paddingEnd: 5, marginBottom: 30 }}>
-          <Text style={{ color: 'black', fontWeight: '600' }}>
+        <View style={{alignItems: 'flex-end', paddingEnd: 5, marginBottom: 30}}>
+          <Text style={{color: 'black', fontWeight: '600'}}>
             Forget Password?{' '}
           </Text>
         </View>
-        <View style={{ margin: 10 }}>
+        <View style={{margin: 10}}>
           <Button
             buttonColor="#0F8F9F"
             icon="send"
@@ -108,13 +96,13 @@ const Login = props => {
             SIGN IN
           </Button>
         </View>
-        <View style={{ alignItems: 'center', marginTop: 10 }}>
-          <Text style={{ color: 'black', fontWeight: '600' }}>
+        <View style={{alignItems: 'center', marginTop: 10}}>
+          <Text style={{color: 'black', fontWeight: '600'}}>
             Don't have Account?
             <TouchableOpacity
-              style={{ color: '#0F8F9F', fontWeight: '800' }}
+              style={{color: '#0F8F9F', fontWeight: '800'}}
               onPress={handlePressSignUp}>
-              <Text style={{ color: 'black', fontWeight: '600' }}>
+              <Text style={{color: 'black', fontWeight: '600'}}>
                 Create Account
               </Text>
             </TouchableOpacity>
