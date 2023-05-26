@@ -1,30 +1,101 @@
+import React, { useEffect, useContext, useState } from 'react';
 import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React, { useEffect, useContext, useState } from 'react';
 import { FAB } from 'react-native-paper';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import PushNotification from 'react-native-push-notification';
 import firestore from '@react-native-firebase/firestore';
 import { AuthContext } from '../context/AuthContext';
-const Dashboard = props => {
+
+const Dashboard = () => {
   const navigation = useNavigation();
   const { user } = useContext(AuthContext);
 
-  const [notificationData, setNotificationData] = useState([])
+  const [notificationData, setNotificationData] = useState([]);
 
-  useEffect(() => {
-    getDataFromFirestore();
-    handleNotification();
-    // firestore()
-    //   .collection('Labs')
-    //   .doc(user?.uid)
-    //   .collection('Prescriptions')
-    //   .get()
-    //   .then((val) => {
-    //     console.log(val?.data())
-    //   })
+  useFocusEffect(
+    React.useCallback(() => {
+      getDataFromFirestore();
+    }, [])
+  );
 
-  }, [])
+  useFocusEffect(
+    React.useCallback(() => {
+      handleNotification();
+    }, [])
+  );
+
+  const getDataFromFirestore = () => {
+    firestore()
+      .collection('Labs')
+      .doc(user.uid)
+      .collection('Prescriptions')
+      .onSnapshot((snaps) => {
+        if (!snaps.empty) {
+          const data = snaps.docs.map((doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }));
+          setNotificationData(data);
+        }
+      });
+  };
+
+  const handleNotification = () => {
+    console.log('notificationData:', notificationData);
+
+    const currentDate = new Date();
+
+    notificationData.forEach((notification) => {
+      const { start, end, time, medName } = notification;
+
+      const startDateParts = start.split('/');
+      const endDateParts = end.split('/');
+      const startTimeParts = time.split(':');
+
+      // console.log('startDateParts: ', startDateParts[2]);
+      // console.log('endDateParts: ', endDateParts);
+      // console.log('startTimeParts: ', startTimeParts);
+
+      const startDate = new Date(
+        parseInt("20" + startDateParts[2]),
+        parseInt(startDateParts[1]) - 1,
+        parseInt(startDateParts[0]),
+        parseInt(startTimeParts[0]),
+        parseInt(startTimeParts[1])
+      );
+
+      const endDate = new Date(
+        parseInt("20" + endDateParts[2]),
+        parseInt(endDateParts[1]) - 1,
+        parseInt(endDateParts[0]),
+        parseInt(startTimeParts[0]),
+        parseInt(startTimeParts[1])
+      );
+
+      // console.log('currentDate: ', currentDate);
+      // console.log('startDate: ', startDate);
+      // console.log('endDate: ', endDate);
+      // console.log('currentDate >= startDate: ', currentDate >= startDate);
+      // console.log('currentDate <= endDate: ', currentDate <= endDate);
+
+      console.log('startDate.getTime(): ', startDate.getTime())
+      console.log('currentDate.getTime(): ', currentDate.getTime());
+
+      if (currentDate >= startDate && currentDate <= endDate) {
+        const timeDifference = startDate.getTime() - currentDate.getTime();
+        console.log('timeDifference: ', timeDifference);
+        PushNotification.localNotificationSchedule({
+          channelId: 'test-channel',
+          title: 'Medications Reminder',
+          message: `Medication: ${medName}`,
+          date: new Date(Date.now() + timeDifference),
+        });
+      }
+    });
+  };
+
+
 
   const handlePressDeshboard = () => {
     navigation.navigate('Tabs');
@@ -33,92 +104,24 @@ const Dashboard = props => {
   const handlePressPrescription = () => {
     navigation.navigate('Prescription');
   };
+
   const handlePressGraph = () => {
     navigation.navigate('Graph');
   };
+
   const handlePressHistory = () => {
     navigation.navigate('History');
   };
+
   const handlePressAddLabs = () => {
     navigation.navigate('AddLabs');
   };
 
-  const getDataFromFirestore = () => {
-    firestore()
-      .collection('Labs') // Table Name
-      .doc(user.uid)
-      .collection('Prescriptions')
-      .onSnapshot(snaps => {
-        if (!snaps.empty) {
-          const data = snaps.docs.map(data =>
-            ({ ...data.data(), id: data.id }));
-          console.log('data: ', data);
-          setNotificationData(data);
-        }
-      });
-  }
-
-  console.log(new Date(Date.now() + 20 * 1000));
-
-  const handleNotification = () => {
-    // PushNotification.localNotification({
-    //   channelId: "test-channel",
-    //   title: "Notification",
-    //   message: "Hello World!"
-    // })
-    // PushNotification.localNotificationSchedule({
-    //   channelId: "test-channel",
-    //   title: "Notification",
-    //   message: "Hello World!",
-    //   date: new Date(Date.now() + 20 * 1000)
-    // })
-
-    notificationData.forEach((notification) => {
-      const { start, end, time, medName } = notification;
-
-      // Convert start and end dates to JavaScript Date objects
-      const startDateParts = start.split('/');
-      const endDateParts = end.split('/');
-      const startTimeParts = time.split(':');
-
-      // Months are zero-based (0-11)
-      const startDate = new Date(
-        parseInt(startDateParts[2]),
-        parseInt(startDateParts[1]) - 1,
-        parseInt(startDateParts[0]),
-        parseInt(startTimeParts[0]),
-        parseInt(startTimeParts[1])
-      );
-
-      const endDate = new Date(
-        parseInt(endDateParts[2]),
-        parseInt(endDateParts[1]) - 1,
-        parseInt(endDateParts[0]),
-        parseInt(startTimeParts[0]),
-        parseInt(startTimeParts[1])
-      );
-
-      // Current Date
-      const currentDate = new Date();
-
-      if (currentDate >= startDate && currentDate <= endDate) {
-        // If the current date is within the start and end date range, schedule the notification
-        const timeDifference = startDate.getTime() - currentDate.getTime();
-
-        PushNotification.localNotificationSchedule({
-          channelId: "test-channel",
-          title: "Medications Reminder",
-          message: `Medication: ${medName}`,
-          date: new Date(Date.now() + timeDifference),
-        });
-      }
-    });
-  }
-
   return (
     <LinearGradient
       colors={['#0F8F9F', '#0F8F9F', '#7CCFD9', '#ffffff']}
-      style={styles.cont}>
+      style={styles.cont}
+    >
       <View style={styles.Logo}>
         <Image
           style={{ height: 80, width: 80 }}
@@ -164,10 +167,8 @@ const Dashboard = props => {
           />
         </View>
       </View>
-      <TouchableOpacity onPress={() => { handleNotification() }} >
-        <Text>
-          Get Notification
-        </Text>
+      <TouchableOpacity onPress={handleNotification}>
+        <Text>Get Notification</Text>
       </TouchableOpacity>
     </LinearGradient>
   );
