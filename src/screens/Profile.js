@@ -1,19 +1,20 @@
-import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React, {useContext} from 'react';
-import {Button} from 'react-native-paper';
-import {AuthAction, AuthContext} from '../context/AuthContext';
+import React, { useContext } from 'react';
+import { Button } from 'react-native-paper';
+import { AuthAction, AuthContext } from '../context/AuthContext';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
-const Profile = ({navigation}) => {
-  const {onSignOut} = useContext(AuthAction);
-  const {user} = useContext(AuthContext);
+const Profile = ({ navigation }) => {
+  const { onSignOut } = useContext(AuthAction);
+  const { user } = useContext(AuthContext);
   return (
     <LinearGradient
       colors={['#0F8F9F', '#0F8F9F', '#0F8F9F', '#7CCFD9', '#ffffff']}
       style={styles.cont}>
       <View style={styles.Logo}>
         <Image
-          style={{height: 80, width: 80}}
+          style={{ height: 80, width: 80 }}
           source={require('../assets/img/logo1.png')}
         />
       </View>
@@ -35,12 +36,15 @@ const Profile = ({navigation}) => {
           <Text style={styles.ConH}>Age:</Text>
           <Text style={styles.ConT}>{user.age}</Text>
         </View>
-        <View style={{marginLeft: 20, marginTop: '20%'}}>
+        <View style={{ marginLeft: 20, marginTop: '20%' }}>
           <Button
             buttonColor="#0F8F9F"
             icon="account-arrow-left"
             mode="contained"
-            onPress={() => onSignOut(navigation)}>
+            onPress={() => {
+              navigation.navigate("Login")
+              EncryptedStorage.clear();
+            }}>
             LOGOUT
           </Button>
         </View>

@@ -1,10 +1,16 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React from 'react';
-import {FAB} from 'react-native-paper';
-import {useNavigation} from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import { FAB } from 'react-native-paper';
+import { useNavigation } from '@react-navigation/native';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
 const Dashboard = props => {
+
+  useEffect(() => {
+    storeUserData()
+  })
+
   const navigation = useNavigation();
 
   const handlePressDeshboard = () => {
@@ -24,19 +30,28 @@ const Dashboard = props => {
     navigation.navigate('AddLabs');
   };
 
+  const storeUserData = async (value) => {
+    try {
+      const jsonValue = JSON.stringify('123')
+      await EncryptedStorage.setItem('userData', jsonValue)
+    } catch (e) {
+      console.log('Error : ', e)
+    }
+  }
+
   return (
     <LinearGradient
       colors={['#0F8F9F', '#0F8F9F', '#7CCFD9', '#ffffff']}
       style={styles.cont}>
       <View style={styles.Logo}>
         <Image
-          style={{height: 80, width: 80}}
+          style={{ height: 80, width: 80 }}
           source={require('../assets/img/logo1.png')}
         />
       </View>
       <Text style={styles.docText}>DASHBOARD</Text>
-      <View style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
-        <View style={{flex: 0, flexDirection: 'row'}}>
+      <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
+        <View style={{ flex: 0, flexDirection: 'row' }}>
           <FAB
             icon="hospital-building"
             style={styles.fab}
@@ -54,7 +69,7 @@ const Dashboard = props => {
             color="#0F8F9F"
           />
         </View>
-        <View style={{flex: 0, flexDirection: 'row'}}>
+        <View style={{ flex: 0, flexDirection: 'row' }}>
           <FAB
             icon="chart-bell-curve"
             style={styles.fab}
