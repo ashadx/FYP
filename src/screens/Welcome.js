@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-native-paper';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { useNavigation } from '@react-navigation/core';
+import { StackActions } from '@react-navigation/native';
 
 const Welcome = props => {
   // const { navigation } = props;
@@ -22,7 +23,9 @@ const Welcome = props => {
     console.log(jsonValue);
     if (jsonValue === null) {
       setTimeout(() => {
-        navigation.navigate('Login')
+        navigation.dispatch(
+          StackActions.replace('Login', {})
+        );
       }, 3000)
     } else {
       setTimeout(() => {
