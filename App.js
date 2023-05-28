@@ -11,31 +11,31 @@ import PushNotification from 'react-native-push-notification';
 
 const App = () => {
 
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      PushNotification.localNotification({
-        message: remoteMessage.notification.body,
-        title: remoteMessage.notification.title,
-        channelId: 'test-channel'
-        // bigPictureUrl: remoteMessage.notification.android.imageUrl,
-        // smallIcon: remoteMessage.notification.android.imageUrl,
-      });
-    });
-    return unsubscribe;
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+  //     PushNotification.localNotification({
+  //       message: remoteMessage.notification.body,
+  //       title: remoteMessage.notification.title,
+  //       channelId: 'test-channel'
+  //       // bigPictureUrl: remoteMessage.notification.android.imageUrl,
+  //       // smallIcon: remoteMessage.notification.android.imageUrl,
+  //     });
+  //   });
+  //   return unsubscribe;
+  // }, []);
 
 
-  useEffect(() => {
-    const setupPushNotifications = async () => {
-      const hasPermission = await requestUserPermission();
-      if (hasPermission) {
-        await getToken();
-      }
-      handleNotifications();
-    };
+  // useEffect(() => {
+  //   const setupPushNotifications = async () => {
+  //     const hasPermission = await requestUserPermission();
+  //     if (hasPermission) {
+  //       await getToken();
+  //     }
+  //     handleNotifications();
+  //   };
 
-    setupPushNotifications();
-  }, []);
+  //   setupPushNotifications();
+  // }, []);
 
   return (
     <ContextProvider>

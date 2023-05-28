@@ -17,8 +17,7 @@ const Welcome = props => {
     navigation.navigate('Login');
   };
 
-
-  useEffect(async () => {
+  const getScreen = async () => {
     const jsonValue = await EncryptedStorage.getItem('userData');
     console.log(jsonValue);
     if (jsonValue === null) {
@@ -36,7 +35,11 @@ const Welcome = props => {
         });
       }, 3000)
     }
-  }, [])
+  }
+
+  // useEffect(() => {
+  //   getScreen()
+  // }, [])
 
   // const getUserData = async () => {
   //   try {
@@ -82,13 +85,13 @@ const Welcome = props => {
           source={require('../assets/img/doc.png')}
         />
       </View>
-      {/* <Button
+      <Button
         buttonColor="#0F8F9F"
         icon="send"
         mode="contained"
-        onPress={handlePress}>
-        SIGN IN
-      </Button> */}
+        onPress={getScreen}>
+        NEXT
+      </Button>
     </LinearGradient>
   );
 };
