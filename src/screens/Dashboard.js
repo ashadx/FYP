@@ -32,7 +32,7 @@ const Dashboard = props => {
 
   const storeUserData = async (value) => {
     try {
-      const jsonValue = JSON.stringify('123')
+      const jsonValue = JSON.stringify('user')
       await EncryptedStorage.setItem('userData', jsonValue)
     } catch (e) {
       console.log('Error : ', e)
