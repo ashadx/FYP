@@ -21,7 +21,7 @@ const ForSuperUser = () => {
     const { onSignIn } = useContext(AuthAction);
 
     const handlePressLogin = () => {
-        if (email == 'superuser@mailinator.com' && password == 'abcd') {
+        if (email == 'superuser@gmail.com' && password == 'abcd') {
             // onSignIn(email, password, navigation,);
             navigation.navigate("SuperUserDashboard")
         } else {

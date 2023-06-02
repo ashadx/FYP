@@ -18,6 +18,8 @@ const Welcome = props => {
   };
 
   const getScreen = async () => {
+    console.log("hey")
+    navigation.navigate("Login")
     const jsonValue = await EncryptedStorage.getItem('userData');
     console.log(jsonValue);
     if (jsonValue === null) {
@@ -26,7 +28,14 @@ const Welcome = props => {
           StackActions.replace('Login', {})
         );
       }, 3000)
-    } else {
+    } else if (jsonValue === "superuser") {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'SuperUserDashboard' }],
+      });
+    }
+
+    else if (jsonValue === "user") {
       setTimeout(() => {
 
         navigation.reset({
