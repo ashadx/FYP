@@ -1,14 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, PermissionsAndroid, Platform } from 'react-native';
 import rnHTMLtoPDF from 'react-native-html-to-pdf';
 import Pdf from 'react-native-pdf';
+import { AuthContext } from '../context/AuthContext';
+import firestore from '@react-native-firebase/firestore';
 
 const PdfScreen = () => {
     const [pdfPath, setPdfPath] = useState('');
+    const [data, setData] = useState([])
+
+    const { user } = useContext(AuthContext);
+
+    // console.log('user: ', user)
 
     useEffect(() => {
+        fetchUsers()
         generatePdf();
     }, []);
+
+    const fetchUsers = async () => {
+        try {
+            const documentSnapshot = await firestore().collection('Users').doc(user?.uid).get();
+
+            if (documentSnapshot.exists) {
+                const userData = documentSnapshot.data();
+                setData(userData);
+                console.log('userData: ', userData)
+            } else {
+                console.log('User not found');
+            }
+        } catch (error) {
+            console.log('Error fetching user:', error);
+        }
+    };
+
 
     const generatePdf = async () => {
         try {
@@ -28,8 +53,16 @@ const PdfScreen = () => {
                 }
             }
 
+            console.log('data: ', data)
+
+            const htmlContent = `
+            <h1>Username</h1>
+            <p>${data?.username}</p>
+            <!-- Add more HTML content here -->
+          `;
+
             const options = {
-                html: '<h1>Hello Zaid Bhai</h1>',
+                html: htmlContent,
                 fileName: 'hello_world',
                 directory: 'Documents',
             };

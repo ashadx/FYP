@@ -7,7 +7,7 @@ import Login from '../../screens/Login';
 import SignUp from '../../screens/SignUp';
 import Template from '../../screens/Template';
 import AddHistory from '../../screens/AddHistory';
-import PdfScreen from '../../screens/PdfScreen';
+
 
 const Stack = createNativeStackNavigator();
 
@@ -18,13 +18,13 @@ const AuthNavigator = () => {
     //   initialRouteName="Welcome">
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
-      initialRouteName="PdfScreen">
-      <Stack.Screen name="PdfScreen" component={PdfScreen} />
+      initialRouteName="Welcome">
       <Stack.Screen name="Welcome" component={Welcome} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={SignUp} />
       <Stack.Screen name="Template" component={Template} />
       <Stack.Screen name="AddHistory" component={AddHistory} />
+
     </Stack.Navigator>
   );
 };
