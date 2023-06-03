@@ -11,29 +11,36 @@ const PdfScreen = () => {
 
     const { user } = useContext(AuthContext);
 
-    // console.log('user: ', user)
+    console.log('user: ', user)
 
     useEffect(() => {
-        fetchUsers()
-        generatePdf();
+        // fetchUsers()
     }, []);
 
-    const fetchUsers = async () => {
-        try {
-            const documentSnapshot = await firestore().collection('Users').doc(user?.uid).get();
+    useEffect(() => {
+        setTimeout(() => {
+            generatePdf()
+        }, 2000)
+    })
+    // const fetchUsers = async () => {
+    //     try {
+    //         const querySnapshot = await firestore().collection('Users').get(); // Update collection name to 'Users'
 
-            if (documentSnapshot.exists) {
-                const userData = documentSnapshot.data();
-                setData(userData);
-                console.log('userData: ', userData)
-            } else {
-                console.log('User not found');
-            }
-        } catch (error) {
-            console.log('Error fetching user:', error);
-        }
-    };
+    //         const userNames = querySnapshot.docs.map((doc) => {
+    //             const data = doc.data();
+    //             console.log('Data ==============> ', data)
+    //             return data;
+    //         });
 
+    //         setData(userNames);
+
+    //         if (typeof callback === 'function') {
+    //             callback(); // Call the callback function after fetching users
+    //         }
+    //     } catch (error) {
+    //         console.log('Error fetching users:', error);
+    //     }
+    // };
 
     const generatePdf = async () => {
         try {
@@ -53,11 +60,19 @@ const PdfScreen = () => {
                 }
             }
 
-            console.log('data: ', data)
+            console.log('data: ', data?.username)
 
             const htmlContent = `
             <h1>Username</h1>
-            <p>${data?.username}</p>
+            <p style="font-size: 28px" >${user?.username}</p>
+            <h1>Age</h1>
+            <p style="font-size: 28px" >${user?.age}</p>
+            <h1>Gender</h1>
+            <p style="font-size: 28px" >${user?.gender}</p>
+            <h1>Weight</h1>
+            <p style="font-size: 28px" >${user?.weight}</p>
+            <h1>Disease</h1>
+            <p style="font-size: 28px" >${user?.template}</p>
             <!-- Add more HTML content here -->
           `;
 
