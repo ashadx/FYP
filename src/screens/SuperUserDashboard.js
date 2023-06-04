@@ -11,20 +11,8 @@ const SuperUserDashboard = () => {
     const navigation = useNavigation();
 
     useEffect(() => {
-        // console.log('this is superuser dashboard')
-        storeUserData()
         fetchUsers()
     }, [])
-
-    const storeUserData = async () => {
-        try {
-            const jsonValue = JSON.stringify('superuser')
-            await EncryptedStorage.setItem('userData', jsonValue)
-        } catch (e) {
-            console.log('Error : ', e)
-        }
-    }
-
 
     const fetchUsers = async () => {
         try {
@@ -54,9 +42,6 @@ const SuperUserDashboard = () => {
                 renderItem={({ item }) => <SuperUserDashboardRenderItem item={item} />}
                 keyExtractor={item => String(item?.uid)}
             />
-            <TouchableOpacity onPress={() => onPressLogout()} >
-                <Text>Logut</Text>
-            </TouchableOpacity>
         </View>
     )
 }

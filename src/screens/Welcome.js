@@ -1,81 +1,34 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { Button } from 'react-native-paper';
 import EncryptedStorage from 'react-native-encrypted-storage';
 import { useNavigation } from '@react-navigation/core';
 import { StackActions } from '@react-navigation/native';
+import { AuthAction } from '../context/AuthContext';
 
-const Welcome = props => {
-  // const { navigation } = props;
+
+const Welcome = () => {
+
+  const { onSignIn } = useContext(AuthAction);
 
   const navigation = useNavigation();
 
-  const [screenName, setScreenName] = useState("")
-
-  const handlePress = () => {
-    navigation.navigate('Login');
-  };
-
   const getScreen = async () => {
-    console.log("hey")
-    navigation.navigate("Login")
-    const jsonValue = await EncryptedStorage.getItem('userData');
-    console.log(jsonValue);
-    if (jsonValue === null) {
-      setTimeout(() => {
-        navigation.dispatch(
-          StackActions.replace('Login', {})
-        );
-      }, 3000)
-    } else if (jsonValue === "superuser") {
-      navigation.reset({
-        index: 0,
-        routes: [{ name: 'SuperUserDashboard' }],
-      });
-    }
+    try {
+      let session = await EncryptedStorage.getItem("user_session");
+      let parsedSession = JSON.parse(session)
 
-    else if (jsonValue === "user") {
-      setTimeout(() => {
+      if (parsedSession == null) {
+        navigation.navigate("Login")
+      } else {
+        onSignIn(parsedSession?.email, parsedSession?.password, navigation)
+      }
 
-        navigation.reset({
-          index: 0,
-          routes: [{ name: 'Tabs' }],
-        });
-      }, 3000)
+    } catch (error) {
+      console.log("error: ", error)
     }
   }
-
-  // useEffect(() => {
-  //   getScreen()
-  // }, [])
-
-  // const getUserData = async () => {
-  //   try {
-  //     const jsonValue = await EncryptedStorage.getItem('userData');
-  //     console.log('jsonValue: ', jsonValue);
-  //     // jsonValue != null ? navigation.navigate("Tabs") : null
-  //     return jsonValue != null ? JSON.parse(jsonValue) : null;
-  //   } catch (e) {
-  //     console.log('Error: ', e);
-  //   }
-  // };
-
-  // const getScreenName = async () => {
-  //   try {
-  //     const jsonValue = await EncryptedStorage.getItem('userData');
-  //     console.log('jsonValue: ', jsonValue);
-  //     if (jsonValue == null) {
-  //       setScreenName("Login")
-  //     } else {
-  //       setScreenName("Tabs")
-  //     }
-  //     // return jsonValue != null ? JSON.parse(jsonValue) : null;
-
-  //   } catch (e) {
-  //     console.log('Error: ', e);
-  //   }
-  // }
 
   return (
     <LinearGradient

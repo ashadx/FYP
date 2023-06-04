@@ -42,8 +42,8 @@ const Profile = ({ navigation }) => {
             icon="account-arrow-left"
             mode="contained"
             onPress={() => {
-              navigation.navigate("Login")
               EncryptedStorage.clear();
+              navigation.navigate("Login")
             }}>
             LOGOUT
           </Button>

@@ -1,14 +1,17 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { FAB } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import EncryptedStorage from 'react-native-encrypted-storage';
+import { AuthContext } from '../context/AuthContext';
 
 const Dashboard = props => {
 
+  const { user } = useContext(AuthContext);
+
   useEffect(() => {
-    storeUserData()
+    createUserSession()
   })
 
   const navigation = useNavigation();
@@ -30,12 +33,15 @@ const Dashboard = props => {
     navigation.navigate('AddLabs');
   };
 
-  const storeUserData = async (value) => {
+  async function createUserSession() {
     try {
-      const jsonValue = JSON.stringify('user')
-      await EncryptedStorage.setItem('userData', jsonValue)
-    } catch (e) {
-      console.log('Error : ', e)
+      await EncryptedStorage.setItem(
+        "user_session",
+        JSON.stringify(user)
+      );
+
+    } catch (error) {
+      console.log("error: ", error)
     }
   }
 
