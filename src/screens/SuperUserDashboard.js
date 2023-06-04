@@ -1,14 +1,22 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Image, FlatList, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, FlatList } from 'react-native'
 import firestore from '@react-native-firebase/firestore';
 import SuperUserDashboardRenderItem from '../components/SuperUserDashboardRenderItem';
-import EncryptedStorage from 'react-native-encrypted-storage';
-import { useNavigation } from '@react-navigation/core';
+import LinearGradient from 'react-native-linear-gradient';
+import ListHeader from '../components/ListHeader';
+
+const gradientColorArray = [
+    '#ffffff',
+    '#ffffff',
+    '#ffffff',
+    '#ffffff',
+    '#7CCFD9',
+    '#0F8F9F',
+]
 
 const SuperUserDashboard = () => {
 
     const [usernames, setUsernames] = useState([])
-    const navigation = useNavigation();
 
     useEffect(() => {
         fetchUsers()
@@ -29,20 +37,23 @@ const SuperUserDashboard = () => {
         }
     };
 
-    const onPressLogout = () => {
-        navigation.navigate("Login")
-        EncryptedStorage.clear();
-    }
-
     return (
-        <View style={styles.mainContainer} >
+        <LinearGradient
+            colors={gradientColorArray}
+            style={styles.mainContainer}>
+
+            <View style={styles.screenHeaderMainContainer} >
+                <Text style={styles.headerTextContainer} >Super User Dashboard</Text>
+            </View>
             <FlatList
+                style={{ flex: 1 }}
                 data={usernames}
                 // renderItem={({ item }) => <SuperUserDashboardRenderItem title={item.title} />}
                 renderItem={({ item }) => <SuperUserDashboardRenderItem item={item} />}
                 keyExtractor={item => String(item?.uid)}
+                ListHeaderComponent={() => <ListHeader />}
             />
-        </View>
+        </LinearGradient>
     )
 }
 
@@ -51,7 +62,6 @@ export default SuperUserDashboard;
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        backgroundColor: 'pink'
     },
     textContainer: {
         color: 'black'
@@ -83,5 +93,21 @@ const styles = StyleSheet.create({
         width: 130,
         paddingBottom: 30,
         paddingTop: 30,
+    },
+    screenHeaderMainContainer: {
+        backgroundColor: '#7CCFD9',
+        width: '100%',
+        height: '7%',
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        borderBottomRightRadius: 15,
+        borderBottomLeftRadius: 15
+    },
+
+    headerTextContainer: {
+        fontSize: 23,
+        color: 'white',
+        fontWeight: '600'
     },
 })

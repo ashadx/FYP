@@ -19,6 +19,8 @@ const SuperUserDashboardRenderItem = ({ item }) => {
         <View style={styles.mainContainer} >
             <TouchableOpacity onPress={() => onPressUsername()} style={styles.userNamesContainer} >
                 <Text style={styles.userNameTextContainer} >{item?.username}</Text>
+                <Text style={styles.userNameTextContainer} >{item?.gender}</Text>
+                <Text style={styles.userNameTextContainer} >{String(item?.age)}</Text>
             </TouchableOpacity>
         </View>
     )
@@ -28,18 +30,19 @@ export default SuperUserDashboardRenderItem;
 
 const styles = StyleSheet.create({
     mainContainer: {
-        // backgroundColor: 'green',
-        flex: 1,
         alignItems: 'center',
-        paddingVertical: '2%'
+        paddingVertical: '3%',
     },
     userNamesContainer: {
-        backgroundColor: 'green',
+        backgroundColor: '#F0F0F0',
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'space-around',
+        flexDirection: 'row',
     },
     userNameTextContainer: {
-        fontSize: 23
+        fontSize: 20,
+        width: '30%',
+        color: 'black',
     }
 })
