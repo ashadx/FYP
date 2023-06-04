@@ -12,16 +12,12 @@ import { TextInput, Button } from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import { AuthAction } from '../context/AuthContext';
 import EncryptedStorage from 'react-native-encrypted-storage';
-import ForUser from '../components/ForUser';
-import ForSuperUser from '../components/ForSuperUser';
 import { useEffect } from 'react/cjs/react.development';
 
 const Login = props => {
   const { navigation } = props;
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isUserOn, setIsUserOn] = useState(true)
-  const [isSuperUserOn, setIsSuperUserOn] = useState(false)
 
   const { onSignIn } = useContext(AuthAction);
 
@@ -30,10 +26,19 @@ const Login = props => {
   };
 
   const handlePressLogin = () => {
-    if (email !== '' && password !== '') {
-      onSignIn(email, password);
-    } else {
+    // if (email !== '' && password !== '') {
+    //   onSignIn(email, password);
+    // } else {
+    //   alert('Invalid Email or Password');
+    // }
+    if (email == '' && password == '') {
       alert('Invalid Email or Password');
+    } else {
+      if (email == "superuser@gmail.com" && password == "abcd") {
+        navigation.navigate("SuperUserDashboard")
+      } else {
+        onSignIn(email, password, navigation);
+      }
     }
   };
 
@@ -48,47 +53,68 @@ const Login = props => {
         '#0F8F9F',
       ]}
       style={styles.cont}>
-      {/* <ScrollView> */}
-      <View style={styles.Logo}>
-        <Image
-          style={{ height: 80, width: 80 }}
-          source={require('../assets/img/logo.png')}
-        />
-      </View>
-      <Text style={styles.docText}>SIGN IN</Text>
-      <View style={styles.toggleButtonContainer} >
-        <TouchableOpacity
-          onPress={() => {
-            setIsUserOn(true)
-            setIsSuperUserOn(false)
-          }}
-          style={[styles.whenUserOn, isSuperUserOn ? styles.whenUserOff : styles.whenUserOn]} >
-          <Text style={[styles.userOnText, isUserOn ? styles.userOnText : styles.userOffText]} >User</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setIsSuperUserOn(true)
-            setIsUserOn(false)
-          }}
-          style={[styles.whenSuperUserOn, isUserOn ? styles.whenSuperUserOff : styles.whenSuperUserOn]} >
-          <Text style={[styles.userOnText, isUserOn ? styles.superUserOnText : styles.superUserOffText]} >Super User</Text>
-        </TouchableOpacity>
-      </View>
-      {isUserOn ? <ForUser /> : <ForSuperUser />}
-
-      <View style={{ alignItems: 'center', marginTop: 10 }}>
-        <Text style={{ color: 'black', fontWeight: '600' }}>
-          Don't have Account?
-          <TouchableOpacity
-            style={{ color: '#0F8F9F', fontWeight: '800' }}
-            onPress={handlePressSignUp}>
-            <Text style={{ color: 'black', fontWeight: '600' }}>
-              Create Account
-            </Text>
-          </TouchableOpacity>
-        </Text>
-      </View>
-      {/* </ScrollView> */}
+      <ScrollView>
+        <View style={styles.Logo}>
+          <Image
+            style={{ height: 80, width: 80 }}
+            source={require('../assets/img/logo.png')}
+          />
+        </View>
+        <Text style={styles.docText}>SIGN IN</Text>
+        <View style={{ flex: 1, justifyContent: 'center', }} >
+          <TextInput
+            label="Email"
+            outlineColor="#0F8F9F"
+            activeOutlineColor="#0F8F9F"
+            mode="outlined"
+            value={email}
+            onChangeText={setEmail}
+            style={{
+              margin: 10,
+              backgroundColor: '#EFEFEF',
+              borderTopRightRadius: 10,
+              borderTopLeftRadius: 10,
+            }}
+          />
+          <TextInput
+            label="Password"
+            outlineColor="#0F8F9F"
+            activeOutlineColor="#0F8F9F"
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+            mode="outlined"
+            right={<TextInput.Icon icon="eye" />}
+            style={{
+              margin: 10,
+              backgroundColor: '#EFEFEF',
+              borderTopRightRadius: 10,
+              borderTopLeftRadius: 10,
+            }}
+          />
+        </View>
+        <View style={{ alignItems: 'center', marginTop: 10 }}>
+          <Text style={{ color: 'black', fontWeight: '600' }}>
+            Don't have Account?
+            <TouchableOpacity
+              style={{ color: '#0F8F9F', fontWeight: '800' }}
+              onPress={handlePressSignUp}>
+              <Text style={{ color: 'black', fontWeight: '600' }}>
+                Create Account
+              </Text>
+            </TouchableOpacity>
+          </Text>
+        </View>
+        <View style={{ margin: 10 }}>
+          <Button
+            buttonColor="#0F8F9F"
+            icon="send"
+            mode="contained"
+            onPress={() => handlePressLogin()}>
+            SIGN IN
+          </Button>
+        </View>
+      </ScrollView>
     </LinearGradient>
   );
 };
@@ -113,8 +139,8 @@ const styles = StyleSheet.create({
     color: '#0F8F9F',
     fontSize: 30,
     textAlign: 'left',
-    // padding: 20,
-    // paddingTop: 100,
+    padding: 20,
+    paddingTop: 100,
   },
   toggleButtonContainer: {
     height: '14%',
@@ -124,46 +150,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     alignSelf: 'center'
-  },
-  whenUserOn: {
-    backgroundColor: 'black',
-    width: '40%',
-    height: '50%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  whenUserOff: {
-    backgroundColor: 'white',
-    width: '40%',
-    height: '50%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  whenSuperUserOn: {
-    backgroundColor: 'black',
-    width: '40%',
-    height: '50%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  whenSuperUserOff: {
-    backgroundColor: 'white',
-    width: '40%',
-    height: '50%',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  userOnText: {
-    color: 'white'
-  },
-  userOffText: {
-    color: 'black'
-  },
-  superUserOffText: {
-    color: 'white'
-  },
-  superUserOnText: {
-    color: 'black'
   },
 });
 
