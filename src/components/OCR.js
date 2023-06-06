@@ -1,13 +1,13 @@
-import {View, Text} from 'react-native';
-import React, {useState} from 'react';
-import {Button, TextInput} from 'react-native-paper';
+import { View, Text } from 'react-native';
+import React, { useState } from 'react';
+import { Button, TextInput } from 'react-native-paper';
 // import TextRecognition from 'react-native-text-recognition';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 // import {firebase} from '@react-native-firebase/ml';
 import txtRecognize from '@react-native-ml-kit/text-recognition';
 // import MlkitOcr from 'react-native-mlkit-ocr';
 
-const OCR = ({handleText}) => {
+const OCR = ({ handleText }) => {
   const [image, setImage] = useState('');
   const [text, setText] = useState('');
 
@@ -59,9 +59,9 @@ const OCR = ({handleText}) => {
           width: '100%',
           justifyContent: 'space-between',
         }}>
-        <View style={{flex: 0, flexDirection: 'column', marginRight: 30}}>
+        <View style={{ flex: 0, flexDirection: 'column', marginRight: 30 }}>
           <Button
-            labelStyle={{fontSize: 11}}
+            labelStyle={{ fontSize: 11 }}
             buttonColor="#0F8F9F"
             icon="file-import-outline"
             mode="contained"
@@ -69,9 +69,9 @@ const OCR = ({handleText}) => {
             Import Image
           </Button>
         </View>
-        <View style={{flex: 0, flexDirection: 'column', marginLeft: 25}}>
+        <View style={{ flex: 0, flexDirection: 'column', marginLeft: 25 }}>
           <Button
-            labelStyle={{fontSize: 11}}
+            labelStyle={{ fontSize: 11 }}
             buttonColor="#0F8F9F"
             icon="file-image"
             mode="contained"

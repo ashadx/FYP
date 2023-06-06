@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
+import com.rnfs.RNFSPackage; // <------- add package
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -33,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
           if (!BuildConfig.DEBUG) {
           packages.add(new ReactNativeFirebaseMessagingPackage());
           packages.add(new RNHTMLtoPDFPackage());
+          packages.add(new RNFSPackage());
           }
           return packages;
         }

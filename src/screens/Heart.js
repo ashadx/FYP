@@ -1,14 +1,14 @@
-import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 
-import {TextInput, Button} from 'react-native-paper';
+import { TextInput, Button } from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import AddLabs from '../components/AddLabs';
-import {AddLabsAction} from '../context/AddLabsContext';
+import { AddLabsAction } from '../context/AddLabsContext';
 import OCR from '../components/OCR';
 
 const Heart = () => {
-  const {addHeartLab} = useContext(AddLabsAction);
+  const { addHeartLab } = useContext(AddLabsAction);
 
   const [CPKMB, setCPKMB] = useState('');
   const [troponin, setTroponin] = useState('');
@@ -62,30 +62,30 @@ const Heart = () => {
       <ScrollView>
         <View style={styles.Logo}>
           <Image
-            style={{height: 80, width: 80}}
+            style={{ height: 80, width: 80 }}
             source={require('../assets/img/logo.png')}
           />
         </View>
         <Text style={styles.docText}>HEART</Text>
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Test Name</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>LR</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Result</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>HR</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Unit</Text>
           </View>
         </View>
@@ -122,9 +122,9 @@ const Heart = () => {
             marginLeft: 16,
             marginRight: 16,
           }}>
-          <View style={{flex: 0, flexDirection: 'column', marginRight: 30}}>
+          <View style={{ flex: 0, flexDirection: 'column', marginRight: 30 }}>
             <Button
-              labelStyle={{fontSize: 11}}
+              labelStyle={{ fontSize: 11 }}
               buttonColor="#0F8F9F"
               icon="file-import-outline"
               mode="contained"
@@ -132,9 +132,9 @@ const Heart = () => {
               Import Image
             </Button>
           </View>
-          <View style={{flex: 0, flexDirection: 'column', marginLeft: 25}}>
+          <View style={{ flex: 0, flexDirection: 'column', marginLeft: 25 }}>
             <Button
-              labelStyle={{fontSize: 11}}
+              labelStyle={{ fontSize: 11 }}
               buttonColor="#0F8F9F"
               icon="file-image"
               mode="contained"
@@ -143,7 +143,7 @@ const Heart = () => {
             </Button>
           </View>
         </View>
-        <View style={{margin: 10}}>
+        <View style={{ margin: 10 }}>
           <Button
             buttonColor="#0F8F9F"
             icon="database-export-outline"

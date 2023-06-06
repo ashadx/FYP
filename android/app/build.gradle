@@ -263,6 +263,8 @@ dependencies {
 
     implementation project(':react-native-html-to-pdf')
 
+    implementation project(':react-native-fs')
+
     implementation project(path: ":@react-native-firebase_messaging")
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules

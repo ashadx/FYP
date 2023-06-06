@@ -1,50 +1,25 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, PermissionsAndroid, Platform } from 'react-native';
+import { View, Text, PermissionsAndroid, Platform, TouchableOpacity } from 'react-native';
 import rnHTMLtoPDF from 'react-native-html-to-pdf';
 import Pdf from 'react-native-pdf';
 import { AuthContext } from '../context/AuthContext';
-import firestore from '@react-native-firebase/firestore';
+import RNFS from 'react-native-fs';
 
 const PdfScreen = () => {
     const [pdfPath, setPdfPath] = useState('');
-    const [data, setData] = useState([])
+    const [data, setData] = useState([]);
+    const [isDownloading, setIsDownloading] = useState(false);
 
     const { user } = useContext(AuthContext);
 
-    console.log('user: ', user)
-
-    useEffect(() => {
-        // fetchUsers()
-    }, []);
-
     useEffect(() => {
         setTimeout(() => {
-            generatePdf()
-        }, 2000)
-    })
-    // const fetchUsers = async () => {
-    //     try {
-    //         const querySnapshot = await firestore().collection('Users').get(); // Update collection name to 'Users'
-
-    //         const userNames = querySnapshot.docs.map((doc) => {
-    //             const data = doc.data();
-    //             console.log('Data ==============> ', data)
-    //             return data;
-    //         });
-
-    //         setData(userNames);
-
-    //         if (typeof callback === 'function') {
-    //             callback(); // Call the callback function after fetching users
-    //         }
-    //     } catch (error) {
-    //         console.log('Error fetching users:', error);
-    //     }
-    // };
+            generatePdf();
+        }, 2000);
+    }, []);
 
     const generatePdf = async () => {
         try {
-            // Request external storage permission for Android
             if (Platform.OS === 'android') {
                 const granted = await PermissionsAndroid.request(
                     PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -60,21 +35,18 @@ const PdfScreen = () => {
                 }
             }
 
-            console.log('data: ', data?.username)
-
             const htmlContent = `
-            <h1>Username</h1>
-            <p style="font-size: 28px" >${user?.username}</p>
-            <h1>Age</h1>
-            <p style="font-size: 28px" >${user?.age}</p>
-            <h1>Gender</h1>
-            <p style="font-size: 28px" >${user?.gender}</p>
-            <h1>Weight</h1>
-            <p style="font-size: 28px" >${user?.weight}</p>
-            <h1>Disease</h1>
-            <p style="font-size: 28px" >${user?.template}</p>
-            <!-- Add more HTML content here -->
-          `;
+        <h1>Username</h1>
+        <p style="font-size: 28px">${user?.username}</p>
+        <h1>Age</h1>
+        <p style="font-size: 28px">${user?.age}</p>
+        <h1>Gender</h1>
+        <p style="font-size: 28px">${user?.gender}</p>
+        <h1>Weight</h1>
+        <p style="font-size: 28px">${user?.weight}</p>
+        <h1>Disease</h1>
+        <p style="font-size: 28px">${user?.template}</p>
+      `;
 
             const options = {
                 html: htmlContent,
@@ -90,10 +62,54 @@ const PdfScreen = () => {
         }
     };
 
+    const handleDownload = async () => {
+        try {
+            if (Platform.OS === 'android') {
+                const granted = await PermissionsAndroid.request(
+                    PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+                    {
+                        title: 'Storage Permission',
+                        message: 'App needs access to your storage to download the PDF',
+                        buttonPositive: 'OK',
+                    }
+                );
+                if (granted !== PermissionsAndroid.RESULTS.GRANTED) {
+                    console.log('Storage permission denied');
+                    return;
+                }
+            }
+
+            const ocrDir = `${RNFS.DocumentDirectoryPath}/OCR`;
+            if (!(await RNFS.exists(ocrDir))) {
+                await RNFS.mkdir(ocrDir);
+            }
+
+            const destinationPath = `${ocrDir}/${user?.username}'s Record`;
+
+            setIsDownloading(true);
+
+            await RNFS.copyFile(pdfPath, destinationPath);
+
+            setIsDownloading(false);
+
+            console.log('PDF downloaded successfully:', destinationPath);
+        } catch (error) {
+            setIsDownloading(false);
+            console.log('Error downloading PDF:', error);
+        }
+    };
+
     return (
         <View style={{ flex: 1 }}>
             {pdfPath ? (
-                <Pdf source={{ uri: `file://${pdfPath}` }} style={{ flex: 1 }} />
+                <View style={{ flex: 1 }}>
+                    <Pdf source={{ uri: `file://${pdfPath}` }} style={{ flex: 1 }} />
+                    <TouchableOpacity onPress={handleDownload} disabled={isDownloading}>
+                        <Text style={{ alignSelf: 'center', marginVertical: 10 }}>
+                            {isDownloading ? 'Downloading...' : 'Download PDF'}
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             ) : (
                 <Text>Generating PDF...</Text>
             )}
