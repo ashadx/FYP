@@ -1,15 +1,15 @@
-import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 
-import {TextInput, IconButton, Button} from 'react-native-paper';
+import { TextInput, IconButton, Button } from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
 import AddLabs from '../components/AddLabs';
-import {AddLabsAction, AddLabsContext} from '../context/AddLabsContext';
+import { AddLabsAction, AddLabsContext } from '../context/AddLabsContext';
 import OCR from '../components/OCR';
 
 const Custom = () => {
-  const {custom} = useContext(AddLabsContext);
-  const {addCustomWidget, addCustomLab} = useContext(AddLabsAction);
+  const { custom } = useContext(AddLabsContext);
+  const { addCustomWidget, addCustomLab } = useContext(AddLabsAction);
   const [testName, setTestName] = useState('');
   const [lr, setLr] = useState('');
   const [hr, setHr] = useState('');
@@ -18,7 +18,7 @@ const Custom = () => {
   const [text, setText] = useState('');
 
   const handleAddTask = () => {
-    const task = {testName: testName, lr: lr, hr: hr, unit: unit};
+    const task = { testName: testName, lr: lr, hr: hr, unit: unit };
     addCustomWidget(task);
     setTestName(null);
     setLr(null);
@@ -32,11 +32,84 @@ const Custom = () => {
       const name = data.testName.toString();
       report[name] = data.result;
     });
+    console.log(report)
     addCustomLab(report);
     custom.forEach(data => {
       data.result = '';
     });
   };
+
+  useEffect(() => {
+    if (text !== '') {
+      const linesArray = text.split('\n');
+
+      const testName = [];
+      const result = [];
+
+      let count = 0
+
+      for (let i = 0; i < linesArray.length; i++) {
+        const line = linesArray[i];
+        if (!line.match(/Test/)) {
+          if (line.match(/Result/)) {
+            count++
+            break
+          }
+          else {
+            testName.push(line)
+            count++;
+          }
+        }
+      }
+      for (let i = count; i < linesArray.length; i++) {
+        const line = linesArray[i];
+        if (!line.match(/Test/) && !line.match(/Result/)) {
+          if (line.match(/Unit/) || line.match(/Range/)) {
+            count++
+            break
+          }
+          else {
+            result.push(line)
+            count++
+          }
+        }
+      }
+
+      const resultNew = []
+      for (let i = 0; i < result.length; i++) {
+        RA = result[i].split(" ")
+        resultNew.push(RA[0])
+      }
+
+      const tests = [];
+
+      for (let i = 0; i < testName.length; i++) {
+        const TestName = testName[i];
+        const Result = resultNew[i];
+
+        const test = {
+          TestName,
+          Result,
+        };
+
+        tests.push(test);
+
+      }
+      let report = {};
+      for (let i = 0; i < tests.length; i++) {
+
+        custom.forEach(data => {
+          const name = data.testName.toString().toLowerCase();
+          if (tests[i]['TestName'].toLowerCase() == name) {
+            report[name] = tests[i]['Result']
+          }
+        });
+      }
+      addCustomLab(report);
+    }
+  }, [text]);
+
+
 
   return (
     <LinearGradient
@@ -53,31 +126,31 @@ const Custom = () => {
       style={styles.cont}>
       <View style={styles.Logo}>
         <Image
-          style={{height: 80, width: 80}}
+          style={{ height: 80, width: 80 }}
           source={require('../assets/img/logo.png')}
         />
       </View>
       <ScrollView>
         <Text style={styles.docText}>Custom</Text>
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Test Name</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>LR</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Result</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>HR</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Unit</Text>
           </View>
         </View>
@@ -93,6 +166,7 @@ const Custom = () => {
                 setResult={text => {
                   item.result = text;
                 }}
+
               />
             );
           })}
@@ -107,7 +181,7 @@ const Custom = () => {
             marginTop: '40%',
           }}>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Test Name</Text>
             <TextInput
               outlineColor="#0F8F9F"
@@ -119,7 +193,7 @@ const Custom = () => {
             />
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>LR</Text>
             <TextInput
               outlineColor="#0F8F9F"
@@ -131,7 +205,7 @@ const Custom = () => {
             />
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>HR</Text>
             <TextInput
               outlineColor="#0F8F9F"
@@ -143,7 +217,7 @@ const Custom = () => {
             />
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Unit</Text>
             <TextInput
               outlineColor="#0F8F9F"
@@ -171,7 +245,7 @@ const Custom = () => {
             />
           </View>
         </View>
-        <View style={{margin: 10}}>
+        <View style={{ margin: 10 }}>
           <Button
             buttonColor="#0F8F9F"
             icon="database-export-outline"

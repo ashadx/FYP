@@ -31,20 +31,76 @@ const Heart = () => {
 
   useEffect(() => {
     if (text !== '') {
-      const cpkmb_postion =
-        text.toLowerCase().indexOf(' = ') + (' = '.length - 1);
-      setCPKMB(text.slice(cpkmb_postion, cpkmb_postion + 4));
-      // console.log('cpkmb_postion => ', text.slice(cpkmb_postion + 7, 4));
+      const linesArray = text.split('\n');
 
-      const troponin_postion =
-        text.toLowerCase().indexOf('troponin = ') + ('troponin = '.length - 1);
-      setTroponin(text.slice(troponin_postion, troponin_postion + 4));
+      const testName = [];
+      const result = [];
 
-      const CRP_postion =
-        text.toLowerCase().indexOf('crp = ') + ('crp = '.length - 1);
-      setCRP(text.slice(CRP_postion, CRP_postion + 4));
+      let count = 0
+
+      for (let i = 0; i < linesArray.length; i++) {
+        const line = linesArray[i];
+        if (!line.match(/Test/)) {
+          if (line.match(/Result/)) {
+            count++
+            break
+          }
+          else {
+            testName.push(line)
+            count++;
+          }
+        }
+      }
+      for (let i = count; i < linesArray.length; i++) {
+        const line = linesArray[i];
+        if (!line.match(/Test/) && !line.match(/Result/)) {
+          if (line.match(/Unit/) || line.match(/Range/)) {
+            count++
+            break
+          }
+          else {
+            result.push(line)
+            count++
+          }
+        }
+      }
+
+      const resultNew = []
+      for (let i = 0; i < result.length; i++) {
+        RA = result[i].split(" ")
+        resultNew.push(RA[0])
+      }
+
+      const tests = [];
+
+      for (let i = 0; i < testName.length; i++) {
+        const TestName = testName[i];
+        const Result = resultNew[i];
+
+        const test = {
+          TestName,
+          Result,
+        };
+
+        tests.push(test);
+
+      }
+
+      for (let i = 0; i < tests.length; i++) {
+        if (tests[i]['TestName'].toLowerCase() == 'cpk-mb') {
+          setCPKMB(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'troponin') {
+          setTroponin(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'crp') {
+          setCRP(tests[i]['Result'])
+        }
+      }
     }
   }, [text]);
+
+
 
   return (
     <LinearGradient
@@ -122,26 +178,7 @@ const Heart = () => {
             marginLeft: 16,
             marginRight: 16,
           }}>
-          <View style={{ flex: 0, flexDirection: 'column', marginRight: 30 }}>
-            <Button
-              labelStyle={{ fontSize: 11 }}
-              buttonColor="#0F8F9F"
-              icon="file-import-outline"
-              mode="contained"
-              onPress={() => handleAddLaunch()}>
-              Import Image
-            </Button>
-          </View>
-          <View style={{ flex: 0, flexDirection: 'column', marginLeft: 25 }}>
-            <Button
-              labelStyle={{ fontSize: 11 }}
-              buttonColor="#0F8F9F"
-              icon="file-image"
-              mode="contained"
-              onPress={() => handleAddImage()}>
-              Fill Results
-            </Button>
-          </View>
+
         </View>
         <View style={{ margin: 10 }}>
           <Button

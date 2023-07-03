@@ -8,13 +8,13 @@ import {
   ScrollView,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import React, {useContext, useEffect, useState} from 'react';
-import {Button, List} from 'react-native-paper';
-import {LineChart} from 'react-native-chart-kit';
-import {AddLabsContext} from '../context/AddLabsContext';
-import {GeneralUtil} from '../context/util';
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, List } from 'react-native-paper';
+import { LineChart } from 'react-native-chart-kit';
+import { AddLabsContext } from '../context/AddLabsContext';
+import { GeneralUtil } from '../context/util';
 const ShowGraph = () => {
-  const {report} = useContext(AddLabsContext);
+  const { report } = useContext(AddLabsContext);
   const [dates, setDates] = useState([]);
   const [reports, setReports] = useState([]);
 
@@ -43,6 +43,7 @@ const ShowGraph = () => {
 
   console.log('dates => ', dates);
 
+
   return (
     <LinearGradient
       colors={['#0F8F9F', '#0F8F9F', '#7CCFD9', '#ffffff']}
@@ -50,7 +51,7 @@ const ShowGraph = () => {
       {/* <DrawerNavigator /> */}
       <View style={styles.Logo}>
         <Image
-          style={{height: 80, width: 80}}
+          style={{ height: 80, width: 80 }}
           source={require('../assets/img/logo1.png')}
         />
       </View>

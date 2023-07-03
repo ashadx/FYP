@@ -42,7 +42,7 @@ const History = () => {
           <Text style={styles.ConT}>{user.history}</Text>
         </View>
         <View style={{ flex: 1, flexDirection: 'row', margin: 20 }}>
-          <View style={{ flex: 0, flexDirection: 'column', marginRight: 20 }}>
+          <View style={{ flex: 1, flexDirection: 'column', marginRight: 20 }}>
             <Button
               textColor="#0F8F9F"
               buttonColor="white"
@@ -52,15 +52,7 @@ const History = () => {
               Export History
             </Button>
           </View>
-          <View style={{ flex: 0, flexDirection: 'column', marginLeft: 20 }}>
-            <Button
-              buttonColor="#0F8F9F"
-              icon="update"
-              mode="contained"
-              onPress={() => console.log('Pressed')}>
-              Update
-            </Button>
-          </View>
+
         </View>
       </ScrollView>
     </LinearGradient>

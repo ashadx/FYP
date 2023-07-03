@@ -8,6 +8,7 @@ import { requestUserPermission, getToken, handleNotifications } from './src/Push
 import messaging from '@react-native-firebase/messaging';
 import { Alert } from 'react-native';
 import PushNotification from 'react-native-push-notification';
+import ReminderScheduler from './src/PushNotifications/reminder';
 
 const App = () => {
 
@@ -41,6 +42,7 @@ const App = () => {
     <ContextProvider>
       <NavigationContainer>
         <StackNavigator />
+        <ReminderScheduler />
       </NavigationContainer>
     </ContextProvider>
   );

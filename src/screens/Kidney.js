@@ -1,13 +1,13 @@
-import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 
-import {TextInput, Button} from 'react-native-paper';
+import { TextInput, Button } from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
-import {AddLabsAction} from '../context/AddLabsContext';
+import { AddLabsAction } from '../context/AddLabsContext';
 import OCR from '../components/OCR';
 
 const Kidney = () => {
-  const {addKidneyLab} = useContext(AddLabsAction);
+  const { addKidneyLab } = useContext(AddLabsAction);
 
   const [BloodUrea, setBloodUrea] = useState('');
   const [Creatinine, setCreatinine] = useState('');
@@ -42,37 +42,84 @@ const Kidney = () => {
 
   useEffect(() => {
     if (text !== '') {
-      const BloodUrea_postion =
-        text.toLowerCase().indexOf(' = ') + (' = '.length - 1);
-      setBloodUrea(text.slice(BloodUrea_postion, BloodUrea_postion + 4));
-      console.log('text => ', text.toLowerCase().search('total protein = '));
+      const linesArray = text.split('\n');
 
-      const Creatinine_postion =
-        text.toLowerCase().search('creatinine = ') +
-        ('creatinine = '.length - 1);
-      setCreatinine(text.slice(Creatinine_postion, Creatinine_postion + 4));
+      const testName = [];
+      const result = [];
 
-      const UricAcid_postion =
-        text.toLowerCase().search('acid = ') + ('acid = '.length - 1);
-      setUricAcid(text.slice(UricAcid_postion, UricAcid_postion + 4));
+      let count = 0
 
-      const Sodium_postion =
-        text.toLowerCase().search('sodium = ') + ('sodium = '.length - 1);
-      setSodium(text.slice(Sodium_postion, Sodium_postion + 4));
+      for (let i = 0; i < linesArray.length; i++) {
+        const line = linesArray[i];
+        if (!line.match(/Test/)) {
+          if (line.match(/Result/)) {
+            count++
+            break
+          }
+          else {
+            testName.push(line)
+            count++;
+          }
+        }
+      }
+      for (let i = count; i < linesArray.length; i++) {
+        const line = linesArray[i];
+        if (!line.match(/Test/) && !line.match(/Result/)) {
+          if (line.match(/Unit/) || line.match(/Range/)) {
+            count++
+            break
+          }
+          else {
+            result.push(line)
+            count++
+          }
+        }
+      }
 
-      const Potassium_postion =
-        text.toLowerCase().search('potassium = ') + ('potassium = '.length - 1);
-      setPotassium(text.slice(Potassium_postion, Potassium_postion + 4));
+      const resultNew = []
+      for (let i = 0; i < result.length; i++) {
+        RA = result[i].split(" ")
+        resultNew.push(RA[0])
+      }
 
-      const Chloride_postion =
-        text.toLowerCase().search('chloride = ') + ('chloride = '.length - 1);
-      setChloride(text.slice(Chloride_postion, Chloride_postion + 4));
+      const tests = [];
 
-      const TotalProtien_postion =
-        text.toLowerCase().search('protein = ') + ('protein = '.length - 1);
-      setTotalProtien(
-        text.slice(TotalProtien_postion, TotalProtien_postion + 4),
-      );
+      for (let i = 0; i < testName.length; i++) {
+        const TestName = testName[i];
+        const Result = resultNew[i];
+
+        const test = {
+          TestName,
+          Result,
+        };
+
+        tests.push(test);
+
+      }
+
+      for (let i = 0; i < tests.length; i++) {
+        if (tests[i]['TestName'].toLowerCase() == 'urea') {
+          setBloodUrea(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'creatinine') {
+          setCreatinine(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'uric acid') {
+          setUricAcid(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'sodium') {
+          setSodium(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'potassium') {
+          setPotassium(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'chloride') {
+          setChloride(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'protein') {
+          setTotalProtien(tests[i]['Result'])
+        }
+      }
     }
   }, [text]);
 
@@ -92,14 +139,14 @@ const Kidney = () => {
       <ScrollView>
         <View style={styles.Logo}>
           <Image
-            style={{height: 80, width: 80}}
+            style={{ height: 80, width: 80 }}
             source={require('../assets/img/logo.png')}
           />
         </View>
         <Text style={styles.docText}>DIABETES</Text>
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Test Name</Text>
             <Text style={styles.Subtxt}>Blood Urea</Text>
             <Text style={styles.Subtxt}>Creatinine</Text>
@@ -110,7 +157,7 @@ const Kidney = () => {
             <Text style={styles.Subtxt}>Total Protein</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>LR</Text>
             <Text style={styles.Subtxt}>10</Text>
             <Text style={styles.Subtxt}>0.6</Text>
@@ -121,7 +168,7 @@ const Kidney = () => {
             <Text style={styles.Subtxt}>6</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Result</Text>
             <TextInput
               outlineColor="#0F8F9F"
@@ -181,7 +228,7 @@ const Kidney = () => {
             />
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>HR</Text>
             <Text style={styles.Subtxt}>50</Text>
             <Text style={styles.Subtxt}>1.3</Text>
@@ -192,7 +239,7 @@ const Kidney = () => {
             <Text style={styles.Subtxt}>8.3</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Unit</Text>
             <Text style={styles.Subtxt}>mg/dL</Text>
             <Text style={styles.Subtxt}>mg/dL</Text>
@@ -203,7 +250,7 @@ const Kidney = () => {
             <Text style={styles.Subtxt}>g/dL</Text>
           </View>
         </View>
-        <View style={{margin: 10}}>
+        <View style={{ margin: 10 }}>
           <Button
             buttonColor="#0F8F9F"
             icon="database-export-outline"

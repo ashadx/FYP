@@ -15,6 +15,10 @@ public class MainActivity extends ReactActivity {
     return "NewProject";
   }
 
+  @Override
+  public void onNewIntent(Intent intent) {
+      super.onNewIntent(intent);
+  }
   /**
    * Returns the instance of the {@link ReactActivityDelegate}. There the RootView is created and
    * you can specify the renderer you wish to use - the new renderer (Fabric) or the old renderer

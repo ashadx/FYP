@@ -1,13 +1,13 @@
-import {View, Text, StyleSheet, Image, ScrollView} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import { View, Text, StyleSheet, Image, ScrollView } from 'react-native';
+import React, { useContext, useEffect, useState } from 'react';
 
-import {TextInput, Button} from 'react-native-paper';
+import { TextInput, Button } from 'react-native-paper';
 import LinearGradient from 'react-native-linear-gradient';
-import {AddLabsAction} from '../context/AddLabsContext';
+import { AddLabsAction } from '../context/AddLabsContext';
 import OCR from '../components/OCR';
 
 const Diabetes = () => {
-  const {addDiabetesLab} = useContext(AddLabsAction);
+  const { addDiabetesLab } = useContext(AddLabsAction);
 
   const [A1C, setA1C] = useState('');
   const [FPG, setFPG] = useState('');
@@ -33,22 +33,78 @@ const Diabetes = () => {
 
   useEffect(() => {
     if (text !== '') {
-      const A1C_postion = text.toLowerCase().search(' = ') + (' = '.length - 1);
-      setA1C(text.slice(A1C_postion, A1C_postion + 4));
+      const linesArray = text.split('\n');
 
-      const FPG_postion =
-        text.toLowerCase().search('fpg test = ') + ('fpg test = '.length - 1);
-      setFPG(text.slice(FPG_postion, FPG_postion + 4));
+      const testName = [];
+      const result = [];
 
-      const GT_postion =
-        text.toLowerCase().search('gt test = ') + ('gt test = '.length - 1);
-      setGT(text.slice(GT_postion, GT_postion + 4));
+      let count = 0
 
-      const RPG_postion =
-        text.toLowerCase().search('rpg test = ') + ('rpg test = '.length - 1);
-      setRPG(text.slice(RPG_postion, RPG_postion + 4));
+      for (let i = 0; i < linesArray.length; i++) {
+        const line = linesArray[i];
+        if (!line.match(/Test/)) {
+          if (line.match(/Result/)) {
+            count++
+            break
+          }
+          else {
+            testName.push(line)
+            count++;
+          }
+        }
+      }
+      for (let i = count; i < linesArray.length; i++) {
+        const line = linesArray[i];
+        if (!line.match(/Test/) && !line.match(/Result/)) {
+          if (line.match(/Unit/) || line.match(/Range/)) {
+            count++
+            break
+          }
+          else {
+            result.push(line)
+            count++
+          }
+        }
+      }
+
+      const resultNew = []
+      for (let i = 0; i < result.length; i++) {
+        RA = result[i].split(" ")
+        resultNew.push(RA[0])
+      }
+
+      const tests = [];
+
+      for (let i = 0; i < testName.length; i++) {
+        const TestName = testName[i];
+        const Result = resultNew[i];
+
+        const test = {
+          TestName,
+          Result,
+        };
+
+        tests.push(test);
+
+      }
+
+      for (let i = 0; i < tests.length; i++) {
+        if (tests[i]['TestName'].toLowerCase() == 'a1c') {
+          setA1C(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'fpg') {
+          setFPG(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'gt') {
+          setGT(tests[i]['Result'])
+        }
+        else if (tests[i]['TestName'].toLowerCase() == 'rpg') {
+          setRPG(tests[i]['Result'])
+        }
+      }
     }
   }, [text]);
+
 
   return (
     <LinearGradient
@@ -66,14 +122,14 @@ const Diabetes = () => {
       <ScrollView>
         <View style={styles.Logo}>
           <Image
-            style={{height: 80, width: 80}}
+            style={{ height: 80, width: 80 }}
             source={require('../assets/img/logo.png')}
           />
         </View>
         <Text style={styles.docText}>DIABETES</Text>
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        <View style={{ flex: 1, flexDirection: 'row' }}>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Test Name</Text>
             <Text style={styles.Subtxt}>A1C Test</Text>
             <Text style={styles.Subtxt}>FPG Test</Text>
@@ -81,7 +137,7 @@ const Diabetes = () => {
             <Text style={styles.Subtxt}>RPG Test</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>LR</Text>
             <Text style={styles.Subtxt}>0</Text>
             <Text style={styles.Subtxt}>0</Text>
@@ -89,7 +145,7 @@ const Diabetes = () => {
             <Text style={styles.Subtxt}>0</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Result</Text>
             <TextInput
               outlineColor="#0F8F9F"
@@ -125,7 +181,7 @@ const Diabetes = () => {
             />
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>HR</Text>
             <Text style={styles.Subtxt}>5.7</Text>
             <Text style={styles.Subtxt}>99</Text>
@@ -133,7 +189,7 @@ const Diabetes = () => {
             <Text style={styles.Subtxt}>200</Text>
           </View>
           <View
-            style={{flex: 1, flexDirection: 'column', alignItems: 'center'}}>
+            style={{ flex: 1, flexDirection: 'column', alignItems: 'center' }}>
             <Text style={styles.txt}>Unit</Text>
             <Text style={styles.Subtxt}>%</Text>
             <Text style={styles.Subtxt}>mg/dL</Text>
@@ -141,7 +197,7 @@ const Diabetes = () => {
             <Text style={styles.Subtxt}>mg/dL</Text>
           </View>
         </View>
-        <View style={{margin: 10}}>
+        <View style={{ margin: 10 }}>
           <Button
             buttonColor="#0F8F9F"
             icon="database-export-outline"

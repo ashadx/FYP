@@ -15,6 +15,7 @@ import java.util.List;
 import io.invertase.firebase.messaging.ReactNativeFirebaseMessagingPackage;
 import com.christopherdro.htmltopdf.RNHTMLtoPDFPackage;
 import com.rnfs.RNFSPackage; // <------- add package
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -34,7 +35,8 @@ public class MainApplication extends Application implements ReactApplication {
           if (!BuildConfig.DEBUG) {
           packages.add(new ReactNativeFirebaseMessagingPackage());
           packages.add(new RNHTMLtoPDFPackage());
-          packages.add(new RNFSPackage());
+          packages.add(new RNFSPackage())
+          packages.add(new ReactNativePushNotificationPackage());
           }
           return packages;
         }

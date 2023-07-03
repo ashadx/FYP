@@ -6,9 +6,16 @@ import EncryptedStorage from 'react-native-encrypted-storage';
 import { useNavigation } from '@react-navigation/core';
 import { StackActions } from '@react-navigation/native';
 import { AuthAction } from '../context/AuthContext';
+import ReminderScheduler from '../PushNotifications/reminder';
 
 
 const Welcome = () => {
+
+  useEffect(() => {
+    // Perform any necessary logic or checks here
+    getScreen()
+    // Navigate to a different screen or route
+  }, []);
 
   const { onSignIn } = useContext(AuthAction);
 
@@ -35,6 +42,7 @@ const Welcome = () => {
       colors={['#0F8F9F', '#0F8F9F', '#7CCFD9', '#ffffff']}
       style={styles.cont}>
       <View style={styles.Logo}>
+
         <Image
           style={{ height: 80, width: 80 }}
           source={require('../assets/img/logo1.png')}
@@ -46,6 +54,7 @@ const Welcome = () => {
           style={{ height: '70%', width: '70%' }}
           source={require('../assets/img/doc.png')}
         />
+
       </View>
       <Button
         buttonColor="#0F8F9F"

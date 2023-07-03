@@ -66,7 +66,7 @@ const OCR = ({ handleText }) => {
             icon="file-import-outline"
             mode="contained"
             onPress={() => handleAddLaunch()}>
-            Import Image
+            Capture Image
           </Button>
         </View>
         <View style={{ flex: 0, flexDirection: 'column', marginLeft: 25 }}>
